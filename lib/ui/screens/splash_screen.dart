@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:fakelingo/ui/home.dart';
+import 'package:fakelingo/ui/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -27,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     Timer(const Duration(seconds: 2), () {
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
@@ -49,17 +51,8 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset('assets/tinder_icon.png', width: 100, height: 100),
+              SvgPicture.asset('assets/logo.svg', width: 100, height: 100, fit: BoxFit.contain),
               const SizedBox(height: 16),
-              const Text(
-                'Tinder',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                ),
-              ),
             ],
           ),
         ),
