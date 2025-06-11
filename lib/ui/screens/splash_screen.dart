@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset('assets/logo.svg', width: 100, height: 100, fit: BoxFit.contain),
+              SvgPicture.asset('assets/splash.png', width: 100, height: 100, fit: BoxFit.contain),
               const SizedBox(height: 16),
             ],
           ),
