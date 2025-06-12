@@ -3,7 +3,6 @@ import 'package:fakelingo/core/provider/loading_provider.dart';
 import 'package:fakelingo/ui/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:fakelingo/ui/screens/home.dart';
 import 'package:fakelingo/ui/screens/login_screen.dart';
 import 'package:fakelingo/ui/screens/register_screen.dart';
 
@@ -24,7 +23,6 @@ class App extends StatelessWidget {
             title: 'FakeLingo Dating',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              primarySwatch: Colors.pink,
               scaffoldBackgroundColor: Colors.black,
               fontFamily: 'Roboto',
               textTheme: const TextTheme(

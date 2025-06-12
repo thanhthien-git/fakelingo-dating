@@ -4,13 +4,17 @@ import 'package:fakelingo/core/services/token_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HttpService {
-  static final HttpService _instance = HttpService._internal();
-  factory HttpService() => _instance;
+  static final Map<String?, HttpService> _instances = {};
 
   late final Dio dio;
 
-  HttpService._internal() {
-    final baseUrl = ApiUrl.baseUrl;
+  factory HttpService([String? type]) {
+    return _instances.putIfAbsent(type, () => HttpService._internal(type));
+  }
+
+  HttpService._internal(String? type) {
+    final baseUrl = _getBaseUrlByType(type);
+
     dio = Dio(BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: const Duration(seconds: 10),
@@ -32,5 +36,14 @@ class HttpService {
         return handler.next(error);
       },
     ));
+  }
+
+  String _getBaseUrlByType(String? type) {
+    switch (type) {
+      case 'message':
+        return ApiUrl.messageServerUrl;
+      default:
+        return ApiUrl.baseUrl;
+    }
   }
 }

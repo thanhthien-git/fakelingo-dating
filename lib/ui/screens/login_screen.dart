@@ -25,11 +25,11 @@ class LoginScreen extends StatelessWidget {
     try {
       loadingProvider.setLoading(true);
       final response = await authService.login(dto);
+      Navigator.pushReplacementNamed(context, '/home');
       print(response);
     } catch (e) {
       AnimatedToast.show(context, 'Đăng nhập thất bại');
     } finally {
-      Navigator.pushReplacementNamed(context, '/home');
       loadingProvider.setLoading(false);
     }
   }
