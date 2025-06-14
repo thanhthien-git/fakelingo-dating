@@ -39,7 +39,7 @@ class ChatItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    data.lastMessage.isNotEmpty ? data.lastMessage : 'Say some words👋',
+                    data.lastMessageContent ?? 'Say some words👋',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

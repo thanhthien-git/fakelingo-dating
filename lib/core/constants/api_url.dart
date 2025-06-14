@@ -19,4 +19,5 @@ class ApiUrl {
   // Message endpoints
   static String get get_chat_list => '$message';
   static String get send_message => '$message/create';
+  static String get get_conversation => '$message/conversation';
 }

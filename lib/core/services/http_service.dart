@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fakelingo/core/constants/api_url.dart';
-import 'package:fakelingo/core/services/token_storage.dart';
+import 'package:fakelingo/core/services/storage_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HttpService {
@@ -26,7 +26,7 @@ class HttpService {
 
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        final token = await TokenStorage.getToken();
+        final token = await StorageService.getToken();
         if (token != null) {
           options.headers['Authorization'] = 'Bearer $token';
         }

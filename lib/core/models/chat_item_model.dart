@@ -25,27 +25,31 @@ class ChatUser {
 }
 
 class ChatList {
-  final ChatUser user;
-  final String conversationId;
-  final String lastMessage;
+  ChatUser user;
+  String conversationId;
+  String? lastMessageId;
+  String? lastMessageContent;
 
   ChatList({
     required this.user,
     required this.conversationId,
-    required this.lastMessage,
+    this.lastMessageId,
+    this.lastMessageContent,
   });
 
   factory ChatList.fromJson(Map<String, dynamic> json) {
     return ChatList(
       user: ChatUser.fromJson(json['user']),
       conversationId: json['conversationId'],
-      lastMessage: json['lastMessage'],
+      lastMessageId: json['lastMessageId'],
+      lastMessageContent: json['lastMessageContent'],
     );
   }
 
   Map<String, dynamic> toJson() => {
     'user': user.toJson(),
     'conversationId': conversationId,
-    'lastMessage': lastMessage,
+    'lastMessageId': lastMessageId,
+    'lastMessageContent': lastMessageContent,
   };
 }

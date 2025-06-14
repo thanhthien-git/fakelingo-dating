@@ -1,3 +1,5 @@
+import 'package:fakelingo/core/services/socket_service.dart';
+import 'package:fakelingo/core/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fakelingo/ui/screens/home.dart';
 import 'package:fakelingo/ui/screens/match_screen.dart';
@@ -37,6 +39,24 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+
+  final SocketService socketService = SocketService();
+
+  @override
+  void initState() {
+    super.initState();
+    _connectSocket();
+  }
+
+  Future<void> _connectSocket() async {
+    final userId = await StorageService.getItem('user_id');
+    if (userId != null) {
+      socketService.initSocket(userId);
+    } else {
+      print('⚠️ userId not found in StorageService');
+    }
   }
 
   Widget _buildNavIcon(IconData icon, int index) {

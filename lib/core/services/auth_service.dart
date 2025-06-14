@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fakelingo/core/constants/api_url.dart';
 import 'package:fakelingo/core/dtos/login_dto.dart';
 import 'package:fakelingo/core/services/http_service.dart';
-import 'package:fakelingo/core/services/token_storage.dart';
+import 'package:fakelingo/core/services/storage_service.dart';
 
 class AuthService {
 
@@ -12,7 +12,7 @@ class AuthService {
     try {
       final response = await _dio.post(ApiUrl.login, data: dto.toJson());
       final token = response.data.toString();
-      TokenStorage.saveToken(token);
+      StorageService.saveToken(token);
       return token;
     } catch (e) {
       throw Exception("Đăng nhập thất bại");
@@ -24,6 +24,6 @@ class AuthService {
   }
 
   static void logout() {
-    TokenStorage.clearToken();
+    StorageService.clearToken();
   }
 }

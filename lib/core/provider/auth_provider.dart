@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:fakelingo/core/services/token_storage.dart';
+import 'package:fakelingo/core/services/storage_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   String? _token;
@@ -19,12 +20,12 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    _token = TokenStorage.getToken();
+    _token = StorageService.getToken();
 
     final valid = await this.isTokenValid(_token);
     if (!valid) {
       _token = null;
-      TokenStorage.clearToken();
+      StorageService.clearToken();
     }
 
     _isLoading = false;
@@ -40,6 +41,9 @@ class AuthProvider extends ChangeNotifier {
       final normalized = base64.normalize(payload);
       final decoded = utf8.decode(base64Url.decode(normalized));
       final payloadMap = json.decode(decoded);
+
+      StorageService.setItem('user_id', payloadMap['userId']);
+      StorageService.setItem('user_name', payloadMap['userName']);
 
       return payloadMap is Map<String, dynamic> ? payloadMap : null;
     } catch (e) {
@@ -69,13 +73,13 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> login(String token) async {
     _token = token;
-    TokenStorage.saveToken(token);
+    StorageService.saveToken(token);
     notifyListeners();
   }
 
   Future<void> logout() async {
     _token = null;
-    TokenStorage.clearToken();
+    StorageService.clearToken();
     notifyListeners();
   }
 }
