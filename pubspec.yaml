@@ -36,6 +36,7 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   flutter_svg: ^1.1.6
   json_annotation: ^4.8.1
+  swipable_stack: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -71,7 +72,17 @@ flutter:
     - assets/logo.svg
     - assets/splash.png
     - assets/blur_background.jpg
+    - assets/1.png
+    - assets/2.png
+    - assets/3.png
+    - assets/back.svg
+    - assets/heart_circle.svg
+    - assets/star_circle.svg
+    - assets/thunder_circle.svg
+    - assets/x_circle.svg
+    - assets/tinder_flame.svg
     - .env
+    
   fonts:
     - family: FontBold
       fonts:

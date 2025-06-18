@@ -1,37 +1,53 @@
+import 'package:fakelingo/ui/components/swiper_home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeState();
+}
+
+class _HomeState extends State<HomeScreen> {
+  Color primaryPink = Color(0xFFFE3C72);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text('Tinder Home'),
-        centerTitle: true,
-        backgroundColor: Colors.black,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        shape: Border(bottom: BorderSide(color: Colors.grey, width: 1.0)),
+        title: Row(
           children: [
-            const Text(
-              'Welcome to Tinder Clone!',
+            SvgPicture.asset('assets/tinder_flame.svg', width: 16, height: 16),
+            SizedBox(width: 5),
+            Text(
+              'tinder',
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
+                color: primaryPink,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Hành động ví dụ
-              },
-              child: const Text('Bắt đầu quẹt ❤'),
+
+            Spacer(),
+
+            IconButton(
+              icon: Icon(Icons.filter_list, color: Colors.black),
+              onPressed: () {},
+            ),
+
+            IconButton(
+              icon: Icon(Icons.lightbulb_circle, color: Colors.black),
+              onPressed: () {},
             ),
           ],
         ),
       ),
+      body: SwiperHome(),
     );
   }
 }
