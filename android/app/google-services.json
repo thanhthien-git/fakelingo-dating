@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "760280976254",
+    "project_id": "fakelingo-42082",
+    "storage_bucket": "fakelingo-42082.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760280976254:android:995b68c4cc96c309e8c12f",
+        "android_client_info": {
+          "package_name": "com.fakelingo.fakelingodating"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqAAmjC8qzwyhdN18nwp4ILdPrSCjKmes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
