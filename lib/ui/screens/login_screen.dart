@@ -6,6 +6,7 @@ import 'package:fakelingo/core/services/auth_service.dart';
 import 'package:fakelingo/ui/components/animate_toast.dart';
 import 'package:fakelingo/ui/components/custom_input.dart';
 import 'package:fakelingo/ui/components/fakelingo_button.dart';
+import 'package:fakelingo/ui/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -43,16 +44,15 @@ class LoginScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           // Ảnh nền
-          Image.asset(
-            'assets/blur_background.jpg',
-            fit: BoxFit.cover,
-          ),
+          Image.asset('assets/blur_background.jpg', fit: BoxFit.cover),
 
           // Lớp làm mờ
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Container(
-              color: Colors.black.withOpacity(0.3), // Lớp phủ tối thêm để dễ đọc chữ
+              color: Colors.black.withOpacity(
+                0.3,
+              ), // Lớp phủ tối thêm để dễ đọc chữ
             ),
           ),
 
@@ -93,10 +93,10 @@ class LoginScreen extends StatelessWidget {
                       isPassword: true,
                     ),
                     const SizedBox(height: 24),
-                    // Login button
 
+                    // Login button
                     AnimatedButton(
-                      isLoading:  isLoading,
+                      isLoading: isLoading,
                       onPressed: isLoading ? null : () => _onLogin(context),
                       child: const Text(
                         'Login',
@@ -117,12 +117,26 @@ class LoginScreen extends StatelessWidget {
                         'No car? Take a car here!',
                         style: TextStyle(color: Colors.white),
                       ),
-                    )
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => MainScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'No car? Take a car here!',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

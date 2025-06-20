@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:swipable_stack/swipable_stack.dart';
@@ -24,72 +23,77 @@ class BottomButtonsRow extends StatelessWidget {
       builder: (context, direction, _) {
         return Align(
           alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildSlot(
-                  show: direction == null,
-                  child: IconButton(
-                    icon: SvgPicture.asset(
-                      'assets/back.svg',
-                      width: 48,
-                      height: 48,
-                      color: canRewind ? Colors.orange : Colors.orange,
-                    ),
-                    onPressed: canRewind ? onRewindTap : null,
-                  ),
-                ),
-                _buildSlot(
-                  show: direction == null || direction == SwipeDirection.left,
-                  child: _ActionIconButton(
-                    asset: 'assets/x_circle.svg',
-                    width: 64,
-                    height: 64,
-                    color:
-                        direction == SwipeDirection.left
-                            ? Colors.black
-                            : Colors.red,
-                    onTap: () => onSwipe(SwipeDirection.left),
-                  ),
-                ),
-                _buildSlot(
-                  show: direction == null || direction == SwipeDirection.up,
-                  child: _ActionIconButton(
-                    asset: 'assets/star_circle.svg',
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildSlot(
+                show: direction == null,
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    'assets/back.svg',
                     width: 48,
                     height: 48,
-                    color: direction == SwipeDirection.up ? Colors.blue : null,
-                    onTap: () => onSwipe(SwipeDirection.up),
+                    color: canRewind ? Colors.orange : Colors.grey,
                   ),
+                  onPressed: canRewind ? onRewindTap : null,
                 ),
-                _buildSlot(
-                  show: direction == null || direction == SwipeDirection.right,
-                  child: _ActionIconButton(
-                    width: 64,
-                    height: 64,
-                    asset: 'assets/heart_circle.svg',
-                    color:
-                        direction == SwipeDirection.right ? Colors.green : null,
-                    onTap:
-                        () async => {
-                          await Future.delayed(Duration(seconds: 2)),
-                          onSwipe(SwipeDirection.right),
-                        },
-                  ),
+              ),
+              _buildSlot(
+                show: direction == null || direction == SwipeDirection.left,
+                child: _ActionIconButton(
+                  asset: 'assets/x_circle.svg',
+                  width: 64,
+                  height: 64,
+                  color:
+                      direction == SwipeDirection.left
+                          ? Colors.black
+                          : Colors.red,
+                  onTap:
+                      () async => {
+                        await Future.delayed(Duration(milliseconds: 500)),
+                        onSwipe(SwipeDirection.left),
+                      },
                 ),
-                _buildSlot(
-                  show: direction == null,
-                  child: _ActionIconButton(
-                    width: 48,
-                    height: 48,
-                    asset: 'assets/thunder_circle.svg',
-                    onTap: () {},
-                  ),
+              ),
+              _buildSlot(
+                show: direction == null || direction == SwipeDirection.up,
+                child: _ActionIconButton(
+                  asset: 'assets/star_circle.svg',
+                  width: 48,
+                  height: 48,
+                  color: direction == SwipeDirection.up ? Colors.blue : null,
+                  onTap:
+                      () async => {
+                        await Future.delayed(Duration(milliseconds: 500)),
+                        onSwipe(SwipeDirection.up),
+                      },
                 ),
-              ],
-            ),
+              ),
+              _buildSlot(
+                show: direction == null || direction == SwipeDirection.right,
+                child: _ActionIconButton(
+                  width: 64,
+                  height: 64,
+                  asset: 'assets/heart_circle.svg',
+                  color:
+                      direction == SwipeDirection.right ? Colors.green : null,
+                  onTap:
+                      () async => {
+                        await Future.delayed(Duration(milliseconds: 500)),
+                        onSwipe(SwipeDirection.right),
+                      },
+                ),
+              ),
+              _buildSlot(
+                show: direction == null,
+                child: _ActionIconButton(
+                  width: 48,
+                  height: 48,
+                  asset: 'assets/thunder_circle.svg',
+                  onTap: () {},
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -97,7 +101,7 @@ class BottomButtonsRow extends StatelessWidget {
   }
 
   Widget _buildSlot({required bool show, required Widget child}) {
-    return show ? child : SizedBox(width: 50, height: 48);
+    return show ? child : SizedBox(width: 80, height: 48);
   }
 }
 
