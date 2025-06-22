@@ -1,5 +1,5 @@
 import 'package:fakelingo/core/models/swipe_item_model.dart';
-import 'package:fakelingo/ui/components/action_button_home.dart';
+import 'package:fakelingo/ui/components/bottom_button_row.dart';
 import 'package:fakelingo/ui/components/card_overlay.dart';
 import 'package:fakelingo/ui/components/swipe_card.dart';
 import 'package:flutter/material.dart';

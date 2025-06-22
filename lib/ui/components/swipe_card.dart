@@ -1,3 +1,4 @@
+import 'package:fakelingo/ui/screens/orther_profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class SwipeCard extends StatefulWidget {
@@ -109,7 +110,6 @@ class _SwipeCardState extends State<SwipeCard> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Nội dung bên trái
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,9 +133,43 @@ class _SwipeCardState extends State<SwipeCard> {
                           ),
                         ),
 
-                        // Icon bên phải
                         const SizedBox(width: 8),
-                        const Icon(Icons.arrow_upward, color: Colors.white),
+                        IconButton(
+                          icon: Icon(Icons.arrow_upward, color: Colors.white),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        OtherProfileDetailsScreen(
+                                          imageUrls: widget.imageUrls,
+                                          currentPhoto: _currentPhoto,
+                                        ),
+                                transitionsBuilder: (
+                                  context,
+                                  animation,
+                                  secondaryAnimation,
+                                  child,
+                                ) {
+                                  const begin = Offset(0.0, 1.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.ease;
+
+                                  var tween = Tween(
+                                    begin: begin,
+                                    end: end,
+                                  ).chain(CurveTween(curve: curve));
+                                  var offsetAnimation = animation.drive(tween);
+
+                                  return SlideTransition(
+                                    position: offsetAnimation,
+                                    child: child,
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ],
