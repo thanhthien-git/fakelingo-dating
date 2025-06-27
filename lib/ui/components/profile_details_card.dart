@@ -65,14 +65,14 @@ class InfoRow extends StatelessWidget {
 class HeaderInfoRow extends StatelessWidget {
   final IconData icon;
   final String? text;
-  final Widget? trailing;
+  final bool trailing;
   final double spacing;
 
   const HeaderInfoRow({
     super.key,
     required this.icon,
     this.text,
-    this.trailing,
+    this.trailing=false,
     this.spacing = 8,
   });
 
@@ -95,9 +95,9 @@ class HeaderInfoRow extends StatelessWidget {
             ),
           ),
         ),
-        if (trailing != null) ...[
+        if (trailing ) ...[
           SizedBox(width: 50),
-          trailing!,
+          Icon(Icons.more_horiz),
         ] else
           SizedBox(width: 20),
       ],

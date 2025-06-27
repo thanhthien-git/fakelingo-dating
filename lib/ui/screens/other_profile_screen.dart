@@ -85,7 +85,11 @@ class _OtherProfileDetailsScreenState extends State<OtherProfileDetailsScreen> {
                   const SizedBox(height: 20),
                   ProfileDetailsCard(
                     children: [
-                      HeaderInfoRow(icon: Icons.search, text: 'Đang tìm kiếm'),
+                      HeaderInfoRow(
+                        trailing: true,
+                        icon: Icons.search,
+                        text: 'Đang tìm kiếm',
+                      ),
                       SizedBox(height: 12),
                       InfoRow(
                         icon: Icons.sentiment_satisfied,
@@ -98,6 +102,7 @@ class _OtherProfileDetailsScreenState extends State<OtherProfileDetailsScreen> {
                   ProfileDetailsCard(
                     children: [
                       HeaderInfoRow(
+                        trailing: true,
                         icon: Icons.contact_emergency,
                         text: 'Thông tin chính',
                       ),
@@ -138,6 +143,7 @@ class _OtherProfileDetailsScreenState extends State<OtherProfileDetailsScreen> {
                   ProfileDetailsCard(
                     children: [
                       HeaderInfoRow(
+                        trailing: true,
                         icon: Icons.contact_emergency,
                         text: 'Thông tin cơ bản',
                       ),
