@@ -7,13 +7,14 @@ class BottomButtonsRow extends StatelessWidget {
   final VoidCallback onRewindTap;
   final bool canRewind;
   final ValueNotifier<SwipeDirection?> swipeDirectionNotifier;
-
+  final bool isShortRow;
   const BottomButtonsRow({
     Key? key,
     required this.onSwipe,
     required this.onRewindTap,
     required this.canRewind,
     required this.swipeDirectionNotifier,
+    this.isShortRow=false,
   }) : super(key: key);
 
   @override
@@ -26,8 +27,11 @@ class BottomButtonsRow extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              if(!isShortRow)
               _buildSlot(
                 show: direction == null,
+                width: 48,
+                height: 48,
                 child: ActionTinderIconButton(
                   direction: SwipeDirection.left,
                   swipeDirection: direction,
@@ -43,6 +47,8 @@ class BottomButtonsRow extends StatelessWidget {
               ),
               _buildSlot(
                 show: direction == null || direction == SwipeDirection.left,
+                width: 64,
+                height: 64,
                 child: ActionTinderIconButton(
                   direction: SwipeDirection.left,
                   swipeDirection: direction,
@@ -61,6 +67,8 @@ class BottomButtonsRow extends StatelessWidget {
               ),
               _buildSlot(
                 show: direction == null || direction == SwipeDirection.up,
+                width: 48,
+                height: 48,
                 child: ActionTinderIconButton(
                   direction: SwipeDirection.up,
                   swipeDirection: direction,
@@ -79,6 +87,8 @@ class BottomButtonsRow extends StatelessWidget {
               ),
               _buildSlot(
                 show: direction == null || direction == SwipeDirection.right,
+                width: 64,
+                height: 64,
                 child: ActionTinderIconButton(
                   direction: SwipeDirection.right,
                   swipeDirection: direction,
@@ -95,8 +105,11 @@ class BottomButtonsRow extends StatelessWidget {
                   },
                 ),
               ),
+              if(!isShortRow)
               _buildSlot(
                 show: direction == null,
+                width: 48,
+                height: 48,
                 child: ActionTinderIconButton(
                   direction: SwipeDirection.right,
                   swipeDirection: direction,
@@ -117,7 +130,12 @@ class BottomButtonsRow extends StatelessWidget {
     );
   }
 
-  Widget _buildSlot({required bool show, required Widget child}) {
-    return show ? child : SizedBox(width: 80, height: 48);
+  Widget _buildSlot({
+    required bool show,
+    required Widget child,
+    required double width,
+    required double height,
+  }) {
+    return show ? child : SizedBox(width: width, height: height);
   }
 }

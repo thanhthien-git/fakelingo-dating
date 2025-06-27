@@ -11,7 +11,7 @@ class ActionTinderIconButton extends StatelessWidget {
   final Color? inActiveIcon;
   final VoidCallback? onTap;
   final SwipeDirection? swipeDirection;
-  final SwipeDirection direction;
+  final SwipeDirection? direction;
 
   const ActionTinderIconButton({
     required this.icon,
@@ -19,7 +19,7 @@ class ActionTinderIconButton extends StatelessWidget {
     required this.height,
     this.onTap,
     required this.swipeDirection,
-    required this.direction,
+    this.direction,
     this.activeColor,
     this.inActiveColor,
     this.activeIcon,
@@ -29,7 +29,6 @@ class ActionTinderIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isActive = swipeDirection == direction;
-
     return SizedBox(
       width: width,
       height: height,

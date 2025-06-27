@@ -1,8 +1,10 @@
 import 'package:fakelingo/core/models/swipe_item_model.dart';
+import 'package:fakelingo/core/provider/swipe_photo_provider.dart';
 import 'package:fakelingo/ui/components/bottom_button_row.dart';
 import 'package:fakelingo/ui/components/card_overlay.dart';
 import 'package:fakelingo/ui/components/swipe_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
 class SwiperHome extends StatefulWidget {
@@ -21,20 +23,28 @@ class _SwiperHomeState extends State<SwiperHome> {
 
   final List<SwipeItemModel> _listItem = [
     SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/girl.png', 'assets/meomeo.jpg'],
+      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
       name: 'Person1',
       age: 20,
-      description:
-          "description 1description 1description 1description 1description 1description 1description 1description 1",
+      description: "Tôi là người hướng nội và yêu chó mèo.",
+      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
+      bio:
+          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
+      basicInfo: BasicInfoModel(
+        distance: 4,
+        height: 170,
+        gender: "Male",
+        zodiac: "Song Ngư",
+      ),
     ),
     SwipeItemModel(
-      imageUrls: ['assets/1.png', 'assets/2.png', 'assets/3.png'],
+      imageUrls: ['assets/2.png', 'assets/2.png', 'assets/2.png'],
       name: 'Person2',
       age: 22,
       description: "description 2",
     ),
     SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/1.png', 'assets/2.png'],
+      imageUrls: ['assets/3.png', 'assets/3.png', 'assets/3.png'],
       name: 'Person3',
       age: 20,
       description: "description 3",
@@ -95,6 +105,7 @@ class _SwiperHomeState extends State<SwiperHome> {
                 },
                 onSwipeCompleted: (index, direction) {
                   _swipeDirectionNotifier.value = null;
+                  context.read<SwipePhotoProvider>().resetPhoto();
                 },
                 horizontalSwipeThreshold: 0.8,
                 verticalSwipeThreshold: 0.8,
@@ -104,10 +115,11 @@ class _SwiperHomeState extends State<SwiperHome> {
                   return Stack(
                     children: [
                       SwipeCard(
-                        name: item.name,
-                        imageUrls: item.imageUrls,
-                        age: item.age,
-                        description: item.description,
+                        swipeItemModel: item,
+                        controller: _controller,
+                        swipeDirectionNotifier: _swipeDirectionNotifier,
+                        showArrowUpIcon: true,
+                        showPrimaryDetail: true,
                       ),
 
                       if (properties.stackIndex == 0 &&
@@ -127,8 +139,9 @@ class _SwiperHomeState extends State<SwiperHome> {
         Positioned(
           left: 0,
           right: 0,
-          bottom: 0,
+          bottom: 10,
           child: BottomButtonsRow(
+            isShortRow: false,
             onSwipe: (direction) {
               _controller.next(swipeDirection: direction);
             },
