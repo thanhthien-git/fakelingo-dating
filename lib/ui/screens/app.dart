@@ -1,5 +1,6 @@
 import 'package:fakelingo/core/provider/auth_provider.dart';
 import 'package:fakelingo/core/provider/loading_provider.dart';
+import 'package:fakelingo/core/provider/swipe_photo_provider.dart';
 import 'package:fakelingo/ui/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => LoadingProvider()),
+        ChangeNotifierProvider(create: (_)=>SwipePhotoProvider()),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, auth, _) {

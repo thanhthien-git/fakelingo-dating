@@ -18,8 +18,6 @@ class _HomeState extends State<HomeScreen> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
-        shape: Border(bottom: BorderSide(color: Colors.grey, width: 1.0)),
         title: Row(
           children: [
             SvgPicture.asset('assets/tinder_flame.svg', width: 16, height: 16),

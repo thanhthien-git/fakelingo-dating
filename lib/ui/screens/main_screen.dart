@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
 
-  final List<Widget> _pages =  [
+  final List<Widget> _pages = [
     const HomeScreen(),
     const MatchScreen(),
     MessageScreen(),
@@ -40,7 +40,6 @@ class _MainScreenState extends State<MainScreen> {
       _currentIndex = index;
     });
   }
-
 
   final SocketService socketService = SocketService();
 
@@ -84,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
         controller: _pageController,
         children: _pages,
         onPageChanged: _onPageChanged,
-        physics: const BouncingScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: Container(
         height: 70,
