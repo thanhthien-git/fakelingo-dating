@@ -5,6 +5,7 @@ class MessageModel {
   final String content;
   final bool isRead;
   final String conversationId;
+  final DateTime createdAt;
 
   MessageModel({
     required this.id,
@@ -13,6 +14,7 @@ class MessageModel {
     required this.content,
     required this.isRead,
     required this.conversationId,
+    required this.createdAt,
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class MessageModel {
       content: json['content'],
       isRead: json['isRead'] ?? false,
       conversationId: json['conversationId'],
+      createdAt: DateTime.parse(json['createdAt']),
     );
   }
 

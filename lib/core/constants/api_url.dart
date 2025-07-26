@@ -15,6 +15,8 @@ class ApiUrl {
   // User endpoints
   static String get profile => '$baseUrl$_user/profile';
   static String get updateProfile => '$baseUrl$_user/update';
+  static String get updateFcmToken => '$baseUrl$_user/fcm-token';
+
 
   // Message endpoints
   static String get get_chat_list => '$message';

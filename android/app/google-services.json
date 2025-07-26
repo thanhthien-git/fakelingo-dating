@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:760280976254:android:d5f31db4a6fb6a59e8c12f",
+        "android_client_info": {
+          "package_name": "com.example.fakelingo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqAAmjC8qzwyhdN18nwp4ILdPrSCjKmes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:760280976254:android:995b68c4cc96c309e8c12f",
         "android_client_info": {
           "package_name": "com.fakelingo.fakelingodating"

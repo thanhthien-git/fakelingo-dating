@@ -46,7 +46,7 @@ class MessageService {
 
   Future<dynamic> sendMessage(SendMessageModel message) async {
     try {
-      final response = await _dio.patch(ApiUrl.send_message, data: message);
+      final response = await _dio.post(ApiUrl.send_message, data: message);
       return response.data;
     } catch (e) {
       print('Error when sending message: $e');

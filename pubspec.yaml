@@ -37,6 +37,9 @@ dependencies:
   flutter_svg: ^1.1.6
   json_annotation: ^4.8.1
   swipable_stack: ^2.0.0
+  firebase_messaging: ^14.7.9
+  firebase_core: ^2.30.0
+  flutter_local_notifications: ^17.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -10,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeState extends State<HomeScreen> {
-  Color primaryPink = Color(0xFFFE3C72);
+  Color primaryPink = Colors.pink;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class _HomeState extends State<HomeScreen> {
             SvgPicture.asset('assets/tinder_flame.svg', width: 16, height: 16),
             SizedBox(width: 5),
             Text(
-              'tinder',
+              'Faketaxi',
               style: TextStyle(
                 color: primaryPink,
                 fontWeight: FontWeight.bold,
