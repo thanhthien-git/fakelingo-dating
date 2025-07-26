@@ -7,7 +7,7 @@ class MatchScreen extends StatelessWidget {
 
   final List<SwipeItemModel> mockLikedUsers = [
     SwipeItemModel(
-      imageUrls: ['https://i.pravatar.cc/300?img=1'],
+      imageUrls: ['assets/1.png'],
       name: 'An',
       age: 22,
       lookingFor: "Một người cùng sở thích du lịch và đọc sách",
@@ -65,7 +65,7 @@ class MatchScreen extends StatelessWidget {
       ),
     ),
     SwipeItemModel(
-      imageUrls: ['https://i.pravatar.cc/300?img=1'],
+      imageUrls: ['assets/1.png'],
       name: 'An',
       age: 22,
       lookingFor: "Một người cùng sở thích du lịch và đọc sách",
@@ -123,7 +123,7 @@ class MatchScreen extends StatelessWidget {
       ),
     ),
     SwipeItemModel(
-      imageUrls: ['https://i.pravatar.cc/300?img=1'],
+      imageUrls: ['assets/1.png'],
       name: 'An',
       age: 22,
       lookingFor: "Một người cùng sở thích du lịch và đọc sách",
@@ -206,7 +206,7 @@ class MatchScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => MatchDetailScreen(user: user),
+                    builder: (_) => MatchDetailScreen(likedUsers: mockLikedUsers, initialIndex: index),
                   ),
                 );
               },

@@ -1,231 +1,112 @@
-import 'package:fakelingo/core/models/swipe_item_model.dart';
-import 'package:fakelingo/ui/components/profile_details_card.dart';
-import 'package:flutter/material.dart';
+  import 'package:fakelingo/ui/components/card_overlay.dart';
+import 'package:fakelingo/ui/components/swipe_card.dart';
+  import 'package:flutter/material.dart';
+  import 'package:swipable_stack/swipable_stack.dart';
+  import 'package:fakelingo/core/models/swipe_item_model.dart';
+  import 'package:fakelingo/core/provider/swipe_photo_provider.dart';
+  import 'package:provider/provider.dart';
 
-class MatchDetailScreen extends StatefulWidget {
-  final SwipeItemModel user;
+  class MatchDetailScreen extends StatefulWidget {
+    final List<SwipeItemModel> likedUsers;
+    final int initialIndex;
 
-  const MatchDetailScreen({super.key, required this.user});
+    const MatchDetailScreen({
+      Key? key,
+      required this.likedUsers,
+      required this.initialIndex,
+    }) : super(key: key);
 
-  @override
-  State<MatchDetailScreen> createState() => _MatchDetailScreenState();
-}
-
-class _MatchDetailScreenState extends State<MatchDetailScreen> {
-  int _currentIndex = 0;
-
-  List<String> get imageUrls => widget.user.imageUrls;
-
-  void _goToPrevious() {
-    if (_currentIndex > 0) {
-      setState(() => _currentIndex--);
-    }
+    @override
+    State<MatchDetailScreen> createState() => _MatchDetailScreenState();
   }
 
-  void _goToNext() {
-    if (_currentIndex < imageUrls.length - 1) {
-      setState(() => _currentIndex++);
+  class _MatchDetailScreenState extends State<MatchDetailScreen> {
+    late final SwipableStackController _controller;
+    final ValueNotifier<SwipeDirection?> _swipeDirectionNotifier =
+        ValueNotifier(null);
+
+    @override
+    void initState() {
+      super.initState();
+      _controller = SwipableStackController();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Jump đến vị trí initialIndex (hack nhẹ)
+        for (int i = 0; i < widget.initialIndex; i++) {
+          _controller.next(swipeDirection: SwipeDirection.right);
+        }
+      });
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    final image = imageUrls[_currentIndex];
+    @override
+    void dispose() {
+      _controller.dispose();
+      _swipeDirectionNotifier.dispose();
+      super.dispose();
+    }
 
-    return Scaffold(
-      backgroundColor: Colors.blueGrey.shade200,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          '${widget.user.name}  ${widget.user.age}',
-          style: const TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 12),
+    @override
+    Widget build(BuildContext context) {
+      return ChangeNotifierProvider(
+        create: (_) => SwipePhotoProvider(),
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
+            title: const Text("Chi tiết người đã thích bạn"),
+          ),
+          body:SwipableStack(
+  controller: _controller,
+  detectableSwipeDirections: const {
+    SwipeDirection.left,
+    SwipeDirection.right,
+  },
+  overlayBuilder: (context, properties) {
+    final direction = properties.direction;
+    final progress = properties.swipeProgress;
 
-            // Ảnh + gesture click trái/phải
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                GestureDetector(
-                  onTapDown: (details) {
-                    final box = context.findRenderObject() as RenderBox;
-                    final localPosition = box.globalToLocal(
-                      details.globalPosition,
-                    );
-                    final width = box.size.width;
+    if (progress < 0.1 && _swipeDirectionNotifier.value != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _swipeDirectionNotifier.value = null;
+      });
+    }
+    if (direction != null &&
+        _swipeDirectionNotifier.value != direction &&
+        progress > 0.3) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _swipeDirectionNotifier.value = direction;
+      });
+    }
 
-                    if (localPosition.dx < width / 2) {
-                      _goToPrevious();
-                    } else {
-                      _goToNext();
-                    }
-                  },
-                  child: Container(
-                    height: 400,
-                    margin: const EdgeInsets.symmetric(horizontal: 24),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 10,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child:
-                        image.startsWith('http')
-                            ? Image.network(
-                              image,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            )
-                            : Image.asset(
-                              image,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                            ),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // Indicator chấm
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(imageUrls.length, (index) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: _currentIndex == index ? 16 : 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: _currentIndex == index ? Colors.pink : Colors.grey,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                );
-              }),
-            ),
-
-            // Thông tin người dùng
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  ProfileDetailsCard(
-                    children: [
-                      HeaderInfoRow(
-                        trailing: false,
-                        icon: Icons.search,
-                        text: 'Đang tìm kiếm',
-                      ),
-                      SizedBox(height: 12),
-                      InfoRow(
-                        icon: Icons.sentiment_satisfied,
-                        text: widget.user.lookingFor,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-
-                  ProfileDetailsCard(
-                    children: [
-                      HeaderInfoRow(
-                        trailing: false,
-                        icon: Icons.contact_emergency,
-                        text: 'Thông tin chính',
-                      ),
-                      if (widget.user.basicInfo?.distance != null) ...[
-                        SizedBox(height: 12),
-                        InfoRow(
-                          icon: Icons.social_distance,
-                          text: 'cách xa ${widget.user.basicInfo!.distance} km',
-                        ),
-                      ],
-                      if (widget.user.basicInfo?.height != null) ...[
-                        SizedBox(height: 12),
-                        InfoRow(
-                          icon: Icons.show_chart,
-                          text: '${widget.user.basicInfo!.height} cm',
-                        ),
-                      ],
-                      if (widget.user.basicInfo?.gender != null) ...[
-                        SizedBox(height: 12),
-                        InfoRow(
-                          icon: Icons.person_3_rounded,
-                          text: '${widget.user.basicInfo!.gender} ',
-                        ),
-                      ],
-                      if (widget.user.basicInfo?.zodiac != null) ...[
-                        SizedBox(height: 12),
-                        InfoRow(
-                          icon: Icons.nightlife_rounded,
-                          text: '${widget.user.basicInfo!.zodiac} ',
-                        ),
-                      ],
-                    ],
-                  ),
-                  SizedBox(height: 10),
-
-                  ProfileDetailsCard(
-                    children: [
-                      HeaderInfoRow(
-                        trailing: false,
-                        icon: Icons.contact_emergency,
-                        text: 'Thông tin cơ bản',
-                      ),
-                      if (widget.user.bio != null) ...[
-                        SizedBox(height: 12),
-                        InfoRow(icon: Icons.label, text: '${widget.user.bio} '),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 32),
-                  Center(
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.pink,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 14,
-                          horizontal: 28,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: () {
-                        // TODO: mở trang chat
-                      },
-                      icon: const Icon(Icons.message, color: Colors.white),
-                      label: const Text(
-                        'Nhắn tin',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                ],
-              ),
-            ),
-          ],
-        ),
+    return properties.index == 0 && direction != null
+        ? CardOverlay(
+            swipeProgress: progress,
+            direction: direction,
+          )
+        : const SizedBox.shrink();
+  },
+  onSwipeCompleted: (index, direction) {
+    // Reset ảnh về index 0 khi chuyển người
+    final photoProvider =
+        Provider.of<SwipePhotoProvider>(context, listen: false);
+    photoProvider.resetPhoto();
+    _swipeDirectionNotifier.value = null;
+  },
+  itemCount: widget.likedUsers.length,
+  builder: (context, properties) {
+    final item = widget.likedUsers[properties.index];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      child: SwipeCard(
+        swipeItemModel: item,
+        controller: _controller,
+        swipeDirectionNotifier: _swipeDirectionNotifier,
+        showPrimaryDetail: true,
       ),
     );
+  },
+),
+        ),
+      );
+    }
   }
-}
