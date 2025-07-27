@@ -8,13 +8,16 @@ class BottomButtonsRow extends StatelessWidget {
   final bool canRewind;
   final ValueNotifier<SwipeDirection?> swipeDirectionNotifier;
   final bool isShortRow;
+  final bool isDisabled; // Add this property
+
   const BottomButtonsRow({
     Key? key,
     required this.onSwipe,
     required this.onRewindTap,
     required this.canRewind,
     required this.swipeDirectionNotifier,
-    this.isShortRow=false,
+    this.isShortRow = false,
+    this.isDisabled = false, // Add this parameter
   }) : super(key: key);
 
   @override
@@ -27,64 +30,27 @@ class BottomButtonsRow extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if(!isShortRow)
-              _buildSlot(
-                show: direction == null,
-                width: 48,
-                height: 48,
-                child: ActionTinderIconButton(
-                  direction: SwipeDirection.left,
-                  swipeDirection: direction,
-                  icon: Icons.undo,
-                  width: 48,
-                  height: 48,
-                  inActiveColor: canRewind ? Colors.orange : Colors.grey,
-                  activeColor: Colors.orange,
-                  activeIcon: Colors.white,
-                  inActiveIcon: Colors.white,
-                  onTap: canRewind ? onRewindTap : null,
-                ),
-              ),
-              _buildSlot(
-                show: direction == null || direction == SwipeDirection.left,
-                width: 64,
-                height: 64,
-                child: ActionTinderIconButton(
-                  direction: SwipeDirection.left,
-                  swipeDirection: direction,
-                  icon: Icons.close,
+              if (!isShortRow)
+                _buildSlot(
+                  show: direction == null || direction == SwipeDirection.left,
                   width: 64,
                   height: 64,
-                  inActiveColor: Colors.white,
-                  activeColor: Colors.red,
-                  activeIcon: Colors.white,
-                  inActiveIcon: Colors.red,
-                  onTap: () async {
-                    await Future.delayed(Duration(milliseconds: 500));
-                    onSwipe(SwipeDirection.left);
-                  },
+                  child: ActionTinderIconButton(
+                    direction: SwipeDirection.left,
+                    swipeDirection: direction,
+                    icon: Icons.close,
+                    width: 64,
+                    height: 64,
+                    inActiveColor: isDisabled ? Colors.grey.shade300 : Colors.white,
+                    activeColor: isDisabled ? Colors.grey.shade400 : Colors.red,
+                    activeIcon: Colors.white,
+                    inActiveIcon: isDisabled ? Colors.grey.shade500 : Colors.red,
+                    onTap: isDisabled ? null : () async {
+                      await Future.delayed(Duration(milliseconds: 500));
+                      onSwipe(SwipeDirection.left);
+                    },
+                  ),
                 ),
-              ),
-              _buildSlot(
-                show: direction == null || direction == SwipeDirection.up,
-                width: 48,
-                height: 48,
-                child: ActionTinderIconButton(
-                  direction: SwipeDirection.up,
-                  swipeDirection: direction,
-                  icon: Icons.star,
-                  width: 48,
-                  height: 48,
-                  inActiveColor: Colors.white,
-                  activeColor: Colors.blue,
-                  activeIcon: Colors.white,
-                  inActiveIcon: Colors.blue,
-                  onTap: () async {
-                    await Future.delayed(Duration(milliseconds: 500));
-                    onSwipe(SwipeDirection.up);
-                  },
-                ),
-              ),
               _buildSlot(
                 show: direction == null || direction == SwipeDirection.right,
                 width: 64,
@@ -95,32 +61,14 @@ class BottomButtonsRow extends StatelessWidget {
                   icon: Icons.favorite,
                   width: 64,
                   height: 64,
-                  inActiveColor: Colors.white,
-                  activeColor: Colors.green,
+                  inActiveColor: isDisabled ? Colors.grey.shade300 : Colors.white,
+                  activeColor: isDisabled ? Colors.grey.shade400 : Colors.green,
                   activeIcon: Colors.white,
-                  inActiveIcon: Colors.green,
-                  onTap: () async {
+                  inActiveIcon: isDisabled ? Colors.grey.shade500 : Colors.green,
+                  onTap: isDisabled ? null : () async {
                     await Future.delayed(Duration(milliseconds: 500));
                     onSwipe(SwipeDirection.right);
                   },
-                ),
-              ),
-              if(!isShortRow)
-              _buildSlot(
-                show: direction == null,
-                width: 48,
-                height: 48,
-                child: ActionTinderIconButton(
-                  direction: SwipeDirection.right,
-                  swipeDirection: direction,
-                  icon: Icons.flash_on,
-                  width: 48,
-                  height: 48,
-                  inActiveColor: Colors.white,
-                  activeColor: Colors.purple,
-                  activeIcon: Colors.white,
-                  inActiveIcon: Colors.purple,
-                  onTap: () {},
                 ),
               ),
             ],

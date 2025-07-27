@@ -6,6 +6,8 @@ class ApiUrl {
 
   static const _auth = '/auth';
   static const _user = '/user';
+  static const _feed = '/feed';
+  static const _swipe = '/swipe';
   static final String message = '$messageServerUrl/messages';
 
   // Auth endpoints
@@ -22,4 +24,10 @@ class ApiUrl {
   static String get get_chat_list => '$message';
   static String get send_message => '$message/create';
   static String get get_conversation => '$message/conversation';
+
+  //Feed endpoints
+  static String get get_feed => '$baseUrl$_feed/get';
+
+  //Swipe endpoint
+static String get action_swipe => '$baseUrl$_swipe/action';
 }

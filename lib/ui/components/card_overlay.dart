@@ -28,11 +28,6 @@ class CardOverlay extends StatelessWidget {
         color = Colors.red;
         alignment = Alignment.topRight;
         break;
-      // case SwipeDirection.up:
-      //   icon = Icons.star;
-      //   color = Colors.blue;
-      //   alignment = Alignment.topCenter;
-      //   break;
       default:
       return const SizedBox.shrink();
     }
@@ -41,7 +36,6 @@ class CardOverlay extends StatelessWidget {
       opacity: opacity,
       child: Align(
         alignment: alignment,
-
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Icon(icon, size: 60, color: color),

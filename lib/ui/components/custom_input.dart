@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class CustomInputField extends StatefulWidget {
@@ -44,14 +43,17 @@ class _CustomInputFieldState extends State<CustomInputField> {
     final input = ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // làm mờ background
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
           width: widget.width,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1), // nền mờ trắng nhẹ
+            color: Colors.black.withOpacity(0.3), // darker frosted look
             borderRadius: BorderRadius.circular(40),
-            border: Border.all(color: Colors.white24, width: 1.5),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.15),
+              width: 1.5,
+            ),
           ),
           child: TextField(
             controller: widget.controller,
@@ -66,11 +68,11 @@ class _CustomInputFieldState extends State<CustomInputField> {
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
-            cursorColor: const Color(0xFFFDD405),
+            cursorColor: Color(0xFFFF3A75), // Tinder-like pink
             decoration: InputDecoration(
               hintText: widget.hintText,
               hintStyle: const TextStyle(
-                color: Colors.white54,
+                color: Colors.white70,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
               ),
@@ -79,7 +81,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                   ? IconButton(
                 icon: Icon(
                   _obscure ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.white54,
+                  color: Colors.white60,
                 ),
                 onPressed: () => setState(() => _obscure = !_obscure),
               )
@@ -91,6 +93,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
       ),
     );
 
-    return widget.width != null ? SizedBox(width: widget.width, child: input) : input;
+    return widget.width != null
+        ? SizedBox(width: widget.width, child: input)
+        : input;
   }
 }

@@ -11,6 +11,7 @@ class SwipeCard extends StatefulWidget {
   final bool showPrimaryDetail;
   final SwipableStackController controller;
   final ValueNotifier<SwipeDirection?> swipeDirectionNotifier;
+
   const SwipeCard({
     Key? key,
     required this.swipeItemModel,
@@ -31,32 +32,31 @@ class _SwipeCardState extends State<SwipeCard> {
   void initState() {
     super.initState();
     _pageController = PageController(
-      initialPage:
-          Provider.of<SwipePhotoProvider>(context, listen: false).currentPhoto,
+      initialPage: Provider.of<SwipePhotoProvider>(context, listen: false).currentPhoto,
     );
   }
 
   void _goToPrevious() {
-    final photoProvider = Provider.of<SwipePhotoProvider>(
-      context,
-      listen: false,
-    );
+    final photoProvider = Provider.of<SwipePhotoProvider>(context, listen: false);
     if (photoProvider.currentPhoto > 0) {
       photoProvider.previousPhoto();
-      _pageController.jumpToPage(photoProvider.currentPhoto);
+      _pageController.animateToPage(
+        photoProvider.currentPhoto,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
   void _goToNext() {
-    final photoProvider = Provider.of<SwipePhotoProvider>(
-      context,
-      listen: false,
-    );
-
-    if (photoProvider.currentPhoto <
-        widget.swipeItemModel.imageUrls.length - 1) {
+    final photoProvider = Provider.of<SwipePhotoProvider>(context, listen: false);
+    if (photoProvider.currentPhoto < widget.swipeItemModel.imageUrls.length - 1) {
       photoProvider.nextPhoto(widget.swipeItemModel.imageUrls.length);
-      _pageController.jumpToPage(photoProvider.currentPhoto);
+      _pageController.animateToPage(
+        photoProvider.currentPhoto,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
@@ -77,172 +77,325 @@ class _SwipeCardState extends State<SwipeCard> {
 
   @override
   Widget build(BuildContext context) {
+    final model = widget.swipeItemModel;
+
     return GestureDetector(
       onTapUp: (details) => _handleTap(details, context),
-      child: Card(
-        margin: EdgeInsets.zero,
-        elevation: 10,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
           child: Stack(
             children: [
+              // Image PageView
               Consumer<SwipePhotoProvider>(
                 builder: (context, provider, child) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (_pageController.hasClients) {
-                      _pageController.jumpToPage(provider.currentPhoto);
-                    }
-                  });
-
                   return PageView.builder(
                     controller: _pageController,
-                    itemCount: widget.swipeItemModel.imageUrls.length,
+                    onPageChanged: (index) {
+                      provider.setPhoto(index);
+                    },
+                    itemCount: model.imageUrls.length,
                     itemBuilder: (context, index) {
-                      return Image.asset(
-                        widget.swipeItemModel.imageUrls[index],
-                        fit: BoxFit.cover,
+                      final imageUrl = model.imageUrls[index];
+                      return Container(
                         width: double.infinity,
                         height: double.infinity,
+                        color: Colors.grey.shade200,
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                              color: Colors.grey.shade200,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                      : null,
+                                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.pink),
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            color: Colors.grey.shade200,
+                            child: const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.broken_image_outlined,
+                                    size: 60,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Không thể tải ảnh',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       );
                     },
                   );
                 },
               ),
-              //overlay for swipe card
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black38, // trên
-                      Colors.transparent, // giữa
-                      Colors.transparent, // giữa
-                      Colors.black54, // dưới
-                    ],
-                    stops: [0.0, 0.2, 0.8, 1.0], // quy định vị trí chuyển màu
+
+              // Photo indicators at top
+              if (model.imageUrls.length > 1)
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  right: 12,
+                  child: Consumer<SwipePhotoProvider>(
+                    builder: (context, provider, _) {
+                      return Row(
+                        children: List.generate(
+                          model.imageUrls.length,
+                              (index) {
+                            return Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 2),
+                                height: 3,
+                                decoration: BoxDecoration(
+                                  color: index == provider.currentPhoto
+                                      ? Colors.white
+                                      : Colors.white.withOpacity(0.4),
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+              // Bottom gradient overlay
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 200,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.3),
+                        Colors.black.withOpacity(0.7),
+                      ],
+                      stops: const [0.0, 0.5, 1.0],
+                    ),
                   ),
                 ),
               ),
-              //Primary detail on swiper card
+
+              // Profile info at bottom
               if (widget.showPrimaryDetail)
                 Positioned(
-                  left: 16,
-                  right: 16,
-                  bottom: 50,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  left: 20,
+                  right: 20,
+                  bottom: 20,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Name and age
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
                               children: [
+                                Flexible(
+                                  child: Text(
+                                    model.name,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black26,
+                                          offset: Offset(0, 1),
+                                          blurRadius: 3,
+                                        ),
+                                      ],
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
                                 Text(
-                                  '${widget.swipeItemModel.name}, ${widget.swipeItemModel.age}',
+                                  '${model.age}',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 24,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w400,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black26,
+                                        offset: Offset(0, 1),
+                                        blurRadius: 3,
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  widget.swipeItemModel.description,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(color: Colors.white),
                                 ),
                               ],
                             ),
-                          ),
 
-                          const SizedBox(width: 8),
-                          //Push to orther profile screen
-                          if (widget.showArrowUpIcon)
-                            IconButton(
-                              icon: Icon(
-                                Icons.arrow_upward,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  PageRouteBuilder(
-                                    pageBuilder:
-                                        (
-                                          context,
-                                          animation,
-                                          secondaryAnimation,
-                                        ) => OtherProfileDetailsScreen(
-                                          swipeItemModel: widget.swipeItemModel,
-                                          controller: widget.controller,
-                                          swipeDirectionNotifier:
-                                              widget.swipeDirectionNotifier,
-                                          showPrimaryDetail: false,
-                                        ),
-                                    transitionsBuilder: (
-                                      context,
-                                      animation,
-                                      secondaryAnimation,
-                                      child,
-                                    ) {
-                                      const begin = Offset(0.0, 1.0);
-                                      const end = Offset.zero;
-                                      const curve = Curves.ease;
-
-                                      var tween = Tween(
-                                        begin: begin,
-                                        end: end,
-                                      ).chain(CurveTween(curve: curve));
-                                      var offsetAnimation = animation.drive(
-                                        tween,
-                                      );
-
-                                      return SlideTransition(
-                                        position: offsetAnimation,
-                                        child: child,
-                                      );
-                                    },
+                            // Distance (if available)
+                            if (model.distance != null) ...[
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.location_on,
+                                    color: Colors.white,
+                                    size: 16,
                                   ),
-                                );
-                              },
-                            ),
-                        ],
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Cách ${model.distance} km',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black26,
+                                          offset: Offset(0, 1),
+                                          blurRadius: 3,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+
+                            // Bio preview
+                            if (model.bio != null && model.bio!.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  model.bio!,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
+
+                      // Info button
+                      if (widget.showArrowUpIcon) ...[
+                        const SizedBox(width: 12),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation, secondaryAnimation) =>
+                                    OtherProfileDetailsScreen(
+                                      swipeItemModel: model,
+                                      controller: widget.controller,
+                                      swipeDirectionNotifier: widget.swipeDirectionNotifier,
+                                      showPrimaryDetail: false,
+                                    ),
+                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                  const begin = Offset(0.0, 1.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.easeInOut;
+
+                                  final tween = Tween(begin: begin, end: end)
+                                      .chain(CurveTween(curve: curve));
+                                  final offsetAnimation = animation.drive(tween);
+
+                                  return SlideTransition(position: offsetAnimation, child: child);
+                                },
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 48,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.9),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.info_outline,
+                              color: Colors.black87,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
-              //Thanh progress
+
+              // Online indicator (optional)
               Positioned(
-                top: 8,
-                left: 16,
-                right: 16,
-                child: Consumer<SwipePhotoProvider>(
-                  builder: (context, provider, _) {
-                    return Row(
-                      children: List.generate(
-                        widget.swipeItemModel.imageUrls.length,
-                        (index) {
-                          return Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 2),
-                              height: 2,
-                              decoration: BoxDecoration(
-                                color:
-                                    index == provider.currentPhoto
-                                        ? Colors.white
-                                        : Colors.black38,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                          );
-                        },
+                top: 20,
+                right: 20,
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
                       ),
-                    );
-                  },
+                    ],
+                  ),
                 ),
               ),
             ],

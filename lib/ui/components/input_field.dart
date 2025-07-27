@@ -306,49 +306,60 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildTinderInputField({
     required TextEditingController controller,
     required String hintText,
     required IconData icon,
     bool isPassword = false,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8F8F8),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
-      ),
-      child: TextField(
-        controller: controller,
-        obscureText: isPassword,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF2D2D2D),
-        ),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(
-            color: Colors.grey.shade500,
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
+    return StatefulBuilder(
+      builder: (context, setState) {
+        final focusNode = FocusNode();
+
+        return Focus(
+          onFocusChange: (_) {
+            setState(() {});
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: focusNode.hasFocus ? Colors.white : Colors.white54,
+                width: 1.5,
+              ),
+            ),
+            child: TextField(
+              controller: controller,
+              obscureText: isPassword,
+              focusNode: focusNode,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: TextStyle(
+                  color: Colors.white.withOpacity(0.6),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+                prefixIcon: Icon(
+                  icon,
+                  color: Colors.white70,
+                  size: 22,
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 18,
+                ),
+              ),
+            ),
           ),
-          prefixIcon: Icon(
-            icon,
-            color: Colors.grey.shade500,
-            size: 22,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 18,
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 

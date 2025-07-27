@@ -1,184 +1,43 @@
 import 'package:fakelingo/core/models/swipe_item_model.dart';
 import 'package:flutter/material.dart';
-import 'match_detail_screen.dart'; // Đảm bảo bạn đã tạo file này
+import 'match_detail_screen.dart';
 
 class MatchScreen extends StatelessWidget {
   MatchScreen({super.key});
 
   final List<SwipeItemModel> mockLikedUsers = [
     SwipeItemModel(
-      imageUrls: ['assets/1.png'],
+      userId: '1',
+      imageUrls: ['assets/1.png', 'assets/2.png'],
       name: 'An',
       age: 22,
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Love traveling and exploring new places.',
-      basicInfo: BasicInfoModel(
-        distance: 2,
-        height: 165,
-        gender: 'Female',
-        zodiac: 'Bạch Dương',
-      ),
+      gender: 'Female',
+      bio: 'Yêu đọc sách và cà phê mỗi sáng ☕',
+      description: 'Người nhẹ nhàng, vui vẻ, thích đi dạo và ăn vặt.',
+      lookingFor: 'Bạn trai biết quan tâm 💖',
+      distance: 5,
     ),
     SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
+      userId: '1',
+      imageUrls: ['assets/3.png', 'assets/4.png'],
       name: 'Bình',
-      age: 24,
-      bio:
-          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Enjoys hiking and outdoor adventures.',
-      basicInfo: BasicInfoModel(
-        distance: 3,
-        height: 175,
-        gender: 'Male',
-        zodiac: 'Kim Ngưu',
-      ),
+      age: 25,
+      gender: 'Male',
+      bio: 'Thích du lịch bụi và chụp ảnh 📸',
+      description: 'Thích khám phá, tìm người đồng hành.',
+      lookingFor: 'Người thích đi đây đi đó 🗺️',
+      distance: 10,
     ),
     SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
-      name: 'Châu',
-      age: 21,
-      bio:
-          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Passionate about music and art.',
-      basicInfo: BasicInfoModel(
-        distance: 1,
-        height: 160,
-        gender: 'Female',
-        zodiac: 'Thiên Bình',
-      ),
-    ),
-    SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
-      name: 'Dương',
+      userId: '1',
+      imageUrls: ['assets/5.png'],
+      name: 'Chi',
       age: 23,
-      bio:
-          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Foodie and fitness enthusiast.',
-      basicInfo: BasicInfoModel(
-        distance: 4,
-        height: 170,
-        gender: 'Male',
-        zodiac: 'Song Ngư',
-      ),
-    ),
-    SwipeItemModel(
-      imageUrls: ['assets/1.png'],
-      name: 'An',
-      age: 22,
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Love traveling and exploring new places.',
-      basicInfo: BasicInfoModel(
-        distance: 2,
-        height: 165,
-        gender: 'Female',
-        zodiac: 'Bạch Dương',
-      ),
-    ),
-    SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
-      name: 'Bình',
-      age: 24,
-      bio:
-          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Enjoys hiking and outdoor adventures.',
-      basicInfo: BasicInfoModel(
-        distance: 3,
-        height: 175,
-        gender: 'Male',
-        zodiac: 'Kim Ngưu',
-      ),
-    ),
-    SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
-      name: 'Châu',
-      age: 21,
-      bio:
-          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Passionate about music and art.',
-      basicInfo: BasicInfoModel(
-        distance: 1,
-        height: 160,
-        gender: 'Female',
-        zodiac: 'Thiên Bình',
-      ),
-    ),
-    SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
-      name: 'Dương',
-      age: 23,
-      bio:
-          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Foodie and fitness enthusiast.',
-      basicInfo: BasicInfoModel(
-        distance: 4,
-        height: 170,
-        gender: 'Male',
-        zodiac: 'Song Ngư',
-      ),
-    ),
-    SwipeItemModel(
-      imageUrls: ['assets/1.png'],
-      name: 'An',
-      age: 22,
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Love traveling and exploring new places.',
-      basicInfo: BasicInfoModel(
-        distance: 2,
-        height: 165,
-        gender: 'Female',
-        zodiac: 'Bạch Dương',
-      ),
-    ),
-    SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
-      name: 'Bình',
-      age: 24,
-      bio:
-          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Enjoys hiking and outdoor adventures.',
-      basicInfo: BasicInfoModel(
-        distance: 3,
-        height: 175,
-        gender: 'Male',
-        zodiac: 'Kim Ngưu',
-      ),
-    ),
-    SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
-      name: 'Châu',
-      age: 21,
-      bio:
-          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Passionate about music and art.',
-      basicInfo: BasicInfoModel(
-        distance: 1,
-        height: 160,
-        gender: 'Female',
-        zodiac: 'Thiên Bình',
-      ),
-    ),
-    SwipeItemModel(
-      imageUrls: ['assets/amba.jpg', 'assets/meomeo.jpg', 'assets/1.png'],
-      name: 'Dương',
-      age: 23,
-      bio:
-          "Sinh viên năm cuối ngành thiết kế, thích vẽ tranh và đi cà phê cuối tuần.",
-      lookingFor: "Một người cùng sở thích du lịch và đọc sách",
-      description: 'Foodie and fitness enthusiast.',
-      basicInfo: BasicInfoModel(
-        distance: 4,
-        height: 170,
-        gender: 'Male',
-        zodiac: 'Song Ngư',
-      ),
+      gender: 'Female',
+      bio: 'Mỗi ngày là một cơ hội mới 🌅',
+      description: 'Nghiêm túc trong mối quan hệ.',
+      lookingFor: 'Người biết lắng nghe và trưởng thành 💬',
+      distance: 8,
     ),
   ];
 

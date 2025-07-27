@@ -1,33 +1,40 @@
+import 'package:fakelingo/core/models/user_model.dart';
+
 class SwipeItemModel {
   final List<String> imageUrls;
   final String name;
   final int age;
-  final String description;
-  final String? lookingFor;
+  final String gender;
   final String? bio;
-  final BasicInfoModel? basicInfo;
+  final String? description;
+  final String? lookingFor;
+  final String userId;
+  final int? distance;
 
   SwipeItemModel({
     required this.imageUrls,
     required this.name,
     required this.age,
-    required this.description,
-    this.lookingFor,
+    required this.gender,
     this.bio,
-    this.basicInfo,
+    this.description,
+    this.lookingFor,
+    required this.userId,
+    this.distance,
   });
-}
 
-class BasicInfoModel {
-  final int? distance;
-  final int? height;
-  final String? gender;
-  final String? zodiac;
-
-  BasicInfoModel({
-     this.distance,
-     this.height,
-     this.gender,
-     this.zodiac,
-  });
+  factory SwipeItemModel.fromUser(User user) {
+    final profile = user.profile!;
+    return SwipeItemModel(
+      imageUrls: profile.photos,
+      name: profile.name,
+      age: profile.age,
+      gender: profile.gender,
+      bio: profile.bio,
+      description: profile.bio,
+      userId: user.id,
+      lookingFor: null,
+      distance: profile.preferences.maxDistance,
+    );
+  }
 }

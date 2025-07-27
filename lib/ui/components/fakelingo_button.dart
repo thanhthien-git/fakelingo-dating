@@ -14,28 +14,52 @@ class AnimatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDisabled = isLoading || onPressed == null;
+
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFFDD405),
-          disabledBackgroundColor: const Color(0xFFFDD405),  // giữ màu vàng khi disabled
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
+      child: GestureDetector(
+        onTap: isDisabled ? null : onPressed,
+        child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
-        ),
-        onPressed: isLoading ? () {} : onPressed,
-        child: isLoading
-            ? SizedBox(
-          height: 24,
-          width: 24,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.5,
-            color: Colors.black,
+          decoration: BoxDecoration(
+            gradient: isDisabled
+                ? const LinearGradient(
+              colors: [Color(0xFF3A3A3A), Color(0xFF2A2A2A)],
+            )
+                : const LinearGradient(
+              colors: [Color(0xFFF93943), Color(0xFFFE6847)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.4),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-        )
-            : child ?? const SizedBox.shrink(),
+          alignment: Alignment.center,
+          child: isLoading
+              ? const SizedBox(
+            height: 24,
+            width: 24,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.5,
+              color: Colors.white,
+            ),
+          )
+              : DefaultTextStyle(
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+            child: child ?? const SizedBox.shrink(),
+          ),
+        ),
       ),
     );
   }
