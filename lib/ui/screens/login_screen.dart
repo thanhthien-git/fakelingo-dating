@@ -147,7 +147,21 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       const SizedBox(height: 24),
                       AnimatedButton(
                         isLoading: isLoading,
-                        onPressed: null,
+                        onPressed: isLoading
+                            ? null
+                            : () async {
+                          try {
+                            final token = await authService.loginWithGoogle();
+                            if (token != null) {
+                              Navigator.pushReplacementNamed(context, '/home');
+                            } else {
+                              AnimatedToast.show(context, 'Google login failed');
+                            }
+                          } catch (e) {
+                            print(e);
+                            AnimatedToast.show(context, 'Google login failed');
+                          }
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,

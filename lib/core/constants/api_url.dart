@@ -13,6 +13,8 @@ class ApiUrl {
   // Auth endpoints
   static String get login => '$baseUrl$_auth/login';
   static String get register => '$baseUrl$_auth/register';
+  static String get loginWithGoogle => '$baseUrl$_auth/google/mobile';
+  static String get googleCallback => '$baseUrl$_auth/google/callback';
 
   // User endpoints
   static String get profile => '$baseUrl$_user/profile';

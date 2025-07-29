@@ -1,3 +1,4 @@
+import 'package:fakelingo/core/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -10,6 +11,11 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   String phoneNumber = '+84 912 345 678';
   String email = 'example@email.com';
+
+  void handleLogout() {
+    AuthService.logout();
+    Navigator.pushReplacementNamed(context, 'login');
+  }
 
   Future<void> _editTextField(
     String title,
@@ -360,7 +366,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        onTap: () => debugPrint('Logout pressed'),
+                        onTap: () => handleLogout(),
                       ),
                     ),
 
