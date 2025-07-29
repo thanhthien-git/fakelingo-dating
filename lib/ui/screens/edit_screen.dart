@@ -44,22 +44,52 @@ class _EditProfileScreenState extends State<EditProfileScreen>
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.black,
-          title: Text(title, style: const TextStyle(color: Colors.white)),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: const Color(0xFFFF6B9D).withOpacity(0.3),
+              width: 1,
+            ),
+          ),
+          title: Text(
+            title,
+            style: const TextStyle(
+              color: Color(0xFF2C2C2C),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           content: TextField(
             controller: controller,
-            style: const TextStyle(color: Colors.white),
-            decoration: const InputDecoration(
+            style: const TextStyle(color: Color(0xFF2C2C2C)),
+            decoration: InputDecoration(
               hintText: "Enter text",
-              hintStyle: TextStyle(color: Colors.white54),
+              hintStyle: TextStyle(
+                color: const Color(0xFF2C2C2C).withOpacity(0.6),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(
+                  color: const Color(0xFFFF6B9D).withOpacity(0.3),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(
+                  color: Color(0xFFFF6B9D),
+                  width: 2,
+                ),
+              ),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text(
+              child: Text(
                 "Cancel",
-                style: TextStyle(color: Colors.white70),
+                style: TextStyle(
+                  color: const Color(0xFF2C2C2C).withOpacity(0.6),
+                ),
               ),
             ),
             TextButton(
@@ -67,7 +97,13 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                 onSave(controller.text.trim());
                 Navigator.pop(context);
               },
-              child: const Text("Save", style: TextStyle(color: Colors.pink)),
+              child: const Text(
+                "Save",
+                style: TextStyle(
+                  color: Color(0xFFFF6B9D),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
         );
@@ -85,7 +121,15 @@ class _EditProfileScreenState extends State<EditProfileScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          color: Colors.black,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              bottom: BorderSide(
+                color: const Color(0xFFFF6B9D).withOpacity(0.2),
+                width: 1,
+              ),
+            ),
+          ),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Row(
             children: [
@@ -93,265 +137,389 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                 child: Text(
                   title.toUpperCase(),
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: Color(0xFF2C2C2C),
                     fontWeight: FontWeight.bold,
+                    fontSize: 12,
                   ),
                 ),
               ),
               if (percent != null)
-                Text(
-                  percent,
-                  style: const TextStyle(
-                    color: Colors.redAccent,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFB3D1).withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    percent,
+                    style: const TextStyle(
+                      color: Color(0xFFFF6B9D),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
             ],
           ),
         ),
-        ListTile(
-          tileColor: const Color(0xFF121212),
-          leading: const Icon(Icons.arrow_right, color: Colors.white),
-          title: Text(
-            value.isEmpty ? "Add $title" : value,
-            style: const TextStyle(color: Colors.white),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF6B9D).withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-          trailing: const Text("Edit", style: TextStyle(color: Colors.white70)),
-          onTap: onTap,
+          child: ListTile(
+            leading: Icon(
+              Icons.arrow_forward_ios,
+              color: const Color(0xFFFF6B9D).withOpacity(0.7),
+              size: 16,
+            ),
+            title: Text(
+              value.isEmpty ? "Add $title" : value,
+              style: const TextStyle(
+                color: Color(0xFF2C2C2C),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            trailing: Text(
+              "Edit",
+              style: TextStyle(
+                color: const Color(0xFF2C2C2C).withOpacity(0.6),
+                fontSize: 14,
+              ),
+            ),
+            onTap: onTap,
+          ),
         ),
-        const Divider(color: Colors.white12, height: 0),
+        Divider(
+          color: const Color(0xFFFF6B9D).withOpacity(0.2),
+          height: 1,
+          thickness: 1,
+        ),
       ],
     );
   }
 
   Widget _buildEditTab() {
-    return ListView(
-      children: [
-        _buildRow(
-          "Name",
-          name,
-          onTap: () {
-            _editTextField("Name", name, (newValue) {
-              setState(() => name = newValue);
-            });
-          },
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFFFE0E6), Color(0xFFFFF5F8)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
-        _buildRow(
-          "Age",
-          age,
-          onTap: () {
-            _editTextField("Age", age, (newValue) {
-              setState(() => age = newValue);
-            });
-          },
-        ),
-        _buildRow(
-          "Hobbies",
-          hobbies,
-          percent: "+6%",
-          onTap: () {
-            _editTextField("Hobbies", hobbies, (newValue) {
-              setState(() => hobbies = newValue);
-            });
-          },
-        ),
-        _buildRow(
-          "Height",
-          height,
-          percent: "+3%",
-          onTap: () {
-            _editTextField("Height", height, (newValue) {
-              setState(() => height = newValue);
-            });
-          },
-        ),
-        _buildRow(
-          "Dating Purpose",
-          purpose,
-          percent: "+3%",
-          onTap: () {
-            _editTextField("Dating Purpose", purpose, (newValue) {
-              setState(() => purpose = newValue);
-            });
-          },
-        ),
-        _buildRow(
-          "Languages I Know",
-          languages,
-          percent: "+3%",
-          onTap: () {
-            _editTextField("Languages I Know", languages, (newValue) {
-              setState(() => languages = newValue);
-            });
-          },
-        ),
-        _buildRow(
-          "More About Me",
-          moreText,
-          percent: "+3%",
-          onTap: () {
-            _editTextField("More About Me", moreText, (newValue) {
-              setState(() => moreText = newValue);
-            });
-          },
-        ),
-        _buildRow(
-          "Zodiac Sign",
-          zodiac,
-          onTap: () {
-            _editTextField("Zodiac Sign", zodiac, (newValue) {
-              setState(() => zodiac = newValue);
-            });
-          },
-        ),
-        _buildRow(
-          "Education",
-          education,
-          onTap: () {
-            _editTextField("Education", education, (newValue) {
-              setState(() => education = newValue);
-            });
-          },
-        ),
-      ],
+      ),
+      child: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFFF6B9D).withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                _buildRow(
+                  "Name",
+                  name,
+                  onTap: () {
+                    _editTextField("Name", name, (newValue) {
+                      setState(() => name = newValue);
+                    });
+                  },
+                ),
+                _buildRow(
+                  "Age",
+                  age,
+                  onTap: () {
+                    _editTextField("Age", age, (newValue) {
+                      setState(() => age = newValue);
+                    });
+                  },
+                ),
+                _buildRow(
+                  "Hobbies",
+                  hobbies,
+                  percent: "+6%",
+                  onTap: () {
+                    _editTextField("Hobbies", hobbies, (newValue) {
+                      setState(() => hobbies = newValue);
+                    });
+                  },
+                ),
+                _buildRow(
+                  "Height",
+                  height,
+                  percent: "+3%",
+                  onTap: () {
+                    _editTextField("Height", height, (newValue) {
+                      setState(() => height = newValue);
+                    });
+                  },
+                ),
+                _buildRow(
+                  "Dating Purpose",
+                  purpose,
+                  percent: "+3%",
+                  onTap: () {
+                    _editTextField("Dating Purpose", purpose, (newValue) {
+                      setState(() => purpose = newValue);
+                    });
+                  },
+                ),
+                _buildRow(
+                  "Languages I Know",
+                  languages,
+                  percent: "+3%",
+                  onTap: () {
+                    _editTextField("Languages I Know", languages, (newValue) {
+                      setState(() => languages = newValue);
+                    });
+                  },
+                ),
+                _buildRow(
+                  "More About Me",
+                  moreText,
+                  percent: "+3%",
+                  onTap: () {
+                    _editTextField("More About Me", moreText, (newValue) {
+                      setState(() => moreText = newValue);
+                    });
+                  },
+                ),
+                _buildRow(
+                  "Zodiac Sign",
+                  zodiac,
+                  onTap: () {
+                    _editTextField("Zodiac Sign", zodiac, (newValue) {
+                      setState(() => zodiac = newValue);
+                    });
+                  },
+                ),
+                _buildRow(
+                  "Education",
+                  education,
+                  onTap: () {
+                    _editTextField("Education", education, (newValue) {
+                      setState(() => education = newValue);
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildPreviewTab() {
     final int totalPages = _mediaFiles.isEmpty ? 1 : _mediaFiles.length;
 
-    return Center(
-      child: AspectRatio(
-        aspectRatio: 2 / 3,
-        child: Stack(
-          children: [
-            // Background image / PageView
-            Positioned.fill(
-              child: PageView.builder(
-                onPageChanged: (index) => setState(() => _currentPage = index),
-                itemCount: totalPages,
-                itemBuilder: (context, index) {
-                  if (_mediaFiles.isEmpty && index == 0) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        'assets/blur_background.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  }
-
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.file(
-                      _mediaFiles[index],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Text(
-                            'Image error',
-                            style: TextStyle(color: Colors.white),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFFFE0E6), Color(0xFFFFF5F8)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Center(
+        child: Container(
+          margin: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF6B9D).withOpacity(0.2),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: AspectRatio(
+            aspectRatio: 2 / 3,
+            child: Stack(
+              children: [
+                // Background image / PageView
+                Positioned.fill(
+                  child: PageView.builder(
+                    onPageChanged:
+                        (index) => setState(() => _currentPage = index),
+                    itemCount: totalPages,
+                    itemBuilder: (context, index) {
+                      if (_mediaFiles.isEmpty && index == 0) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFFFFB3D1), Color(0xFFFF6B9D)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.photo_camera_outlined,
+                                size: 64,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         );
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
+                      }
 
-            // Dots indicator
-            if (_mediaFiles.isNotEmpty)
-              Positioned(
-                top: 16,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(totalPages, (index) {
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      height: 4,
-                      width: 24,
-                      decoration: BoxDecoration(
-                        color:
-                            _currentPage == index
-                                ? Colors.white
-                                : Colors.white24,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-
-            // Text overlay: name, hobbies, moreText
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.transparent, Colors.black87],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.file(
+                          _mediaFiles[index],
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFFFFB3D1),
+                                    Color(0xFFFF6B9D),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  'Image error',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '$name, $age',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
+
+                // Dots indicator
+                if (_mediaFiles.isNotEmpty)
+                  Positioned(
+                    top: 16,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(totalPages, (index) {
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          height: 4,
+                          width: 24,
+                          decoration: BoxDecoration(
+                            color:
+                                _currentPage == index
+                                    ? Colors.white
+                                    : Colors.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+
+                // Text overlay: name, hobbies, moreText
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(16),
+                        bottomRight: Radius.circular(16),
+                      ),
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.transparent,
+                          const Color(0xFF2C2C2C).withOpacity(0.8),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    if (hobbies.isNotEmpty)
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 4,
-                        children:
-                            hobbies.split(',').map((hobby) {
-                              return Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(182, 61, 60, 60),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  hobby.trim(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                      ),
-                    const SizedBox(height: 8),
-                    if (moreText.isNotEmpty)
-                      Text(
-                        moreText,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontStyle: FontStyle.normal,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '$name, $age',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                  ],
+                        const SizedBox(height: 8),
+                        if (hobbies.isNotEmpty)
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 4,
+                            children:
+                                hobbies.split(',').map((hobby) {
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 6,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(
+                                        0xFFFF6B9D,
+                                      ).withOpacity(0.8),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      hobby.trim(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                          ),
+                        const SizedBox(height: 8),
+                        if (moreText.isNotEmpty)
+                          Text(
+                            moreText,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontStyle: FontStyle.normal,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -360,40 +528,87 @@ class _EditProfileScreenState extends State<EditProfileScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFFFFF5F8),
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.pink,
-          labelColor: Colors.pink,
-          unselectedLabelColor: Colors.white,
-          tabs: const [Tab(text: 'Edit'), Tab(text: 'Preview')],
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Color(0xFF2C2C2C)),
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(
+            color: Color(0xFF2C2C2C),
+            fontWeight: FontWeight.w600,
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: TabBarView(
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFFF6B9D).withOpacity(0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: TabBar(
               controller: _tabController,
-              children: [_buildEditTab(), _buildPreviewTab()],
+              indicatorColor: const Color(0xFFFF6B9D),
+              indicatorWeight: 3,
+              labelColor: const Color(0xFFFF6B9D),
+              unselectedLabelColor: const Color(0xFF2C2C2C).withOpacity(0.6),
+              labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+              tabs: const [Tab(text: 'Edit'), Tab(text: 'Preview')],
             ),
           ),
-        ],
+        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [_buildEditTab(), _buildPreviewTab()],
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(12),
-        child: Ink(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFFF6B9D).withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: Container(
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFFE91E63), Color(0xFFFF9800)],
+              colors: [Color(0xFFFF6B9D), Color(0xFFFFB3D1)],
             ),
             borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF6B9D).withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: ElevatedButton(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Saved successfully")),
+                SnackBar(
+                  content: const Text(
+                    "Profile saved successfully!",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  backgroundColor: const Color(0xFF00E676),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(
@@ -402,13 +617,14 @@ class _EditProfileScreenState extends State<EditProfileScreen>
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.symmetric(vertical: 16),
             ),
             child: const Text(
-              'Save',
+              'Save Changes',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
           ),

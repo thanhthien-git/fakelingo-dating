@@ -32,12 +32,16 @@ class _SwipeCardState extends State<SwipeCard> {
   void initState() {
     super.initState();
     _pageController = PageController(
-      initialPage: Provider.of<SwipePhotoProvider>(context, listen: false).currentPhoto,
+      initialPage:
+          Provider.of<SwipePhotoProvider>(context, listen: false).currentPhoto,
     );
   }
 
   void _goToPrevious() {
-    final photoProvider = Provider.of<SwipePhotoProvider>(context, listen: false);
+    final photoProvider = Provider.of<SwipePhotoProvider>(
+      context,
+      listen: false,
+    );
     if (photoProvider.currentPhoto > 0) {
       photoProvider.previousPhoto();
       _pageController.animateToPage(
@@ -49,8 +53,12 @@ class _SwipeCardState extends State<SwipeCard> {
   }
 
   void _goToNext() {
-    final photoProvider = Provider.of<SwipePhotoProvider>(context, listen: false);
-    if (photoProvider.currentPhoto < widget.swipeItemModel.imageUrls.length - 1) {
+    final photoProvider = Provider.of<SwipePhotoProvider>(
+      context,
+      listen: false,
+    );
+    if (photoProvider.currentPhoto <
+        widget.swipeItemModel.imageUrls.length - 1) {
       photoProvider.nextPhoto(widget.swipeItemModel.imageUrls.length);
       _pageController.animateToPage(
         photoProvider.currentPhoto,
@@ -66,6 +74,85 @@ class _SwipeCardState extends State<SwipeCard> {
       _goToPrevious();
     } else {
       _goToNext();
+    }
+  }
+
+  // Method mới để xử lý cả asset và network images
+  Widget _buildImage(String imageUrl) {
+    // Kiểm tra xem có phải là network URL không
+    if (imageUrl.startsWith('http') || imageUrl.startsWith('https')) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: Colors.grey.shade200,
+            child: Center(
+              child: CircularProgressIndicator(
+                value:
+                    loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.pink),
+              ),
+            ),
+          );
+        },
+        errorBuilder:
+            (context, error, stackTrace) => Container(
+              color: Colors.grey.shade200,
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.broken_image_outlined,
+                      size: 60,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Không thể tải ảnh',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+      );
+    } else {
+      // Đây là asset image
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder:
+            (context, error, stackTrace) => Container(
+              color: Colors.grey.shade200,
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.broken_image_outlined,
+                      size: 60,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Không thể tải ảnh',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+      );
     }
   }
 
@@ -111,45 +198,7 @@ class _SwipeCardState extends State<SwipeCard> {
                         width: double.infinity,
                         height: double.infinity,
                         color: Colors.grey.shade200,
-                        child: Image.network(
-                          imageUrl,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Container(
-                              color: Colors.grey.shade200,
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes != null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                      : null,
-                                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.pink),
-                                ),
-                              ),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            color: Colors.grey.shade200,
-                            child: const Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.broken_image_outlined,
-                                    size: 60,
-                                    color: Colors.grey,
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Không thể tải ảnh',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                        child: _buildImage(imageUrl), // Sử dụng method mới
                       );
                     },
                   );
@@ -165,23 +214,23 @@ class _SwipeCardState extends State<SwipeCard> {
                   child: Consumer<SwipePhotoProvider>(
                     builder: (context, provider, _) {
                       return Row(
-                        children: List.generate(
-                          model.imageUrls.length,
-                              (index) {
-                            return Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 2),
-                                height: 3,
-                                decoration: BoxDecoration(
-                                  color: index == provider.currentPhoto
-                                      ? Colors.white
-                                      : Colors.white.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
+                        children: List.generate(model.imageUrls.length, (
+                          index,
+                        ) {
+                          return Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 2),
+                              height: 3,
+                              decoration: BoxDecoration(
+                                color:
+                                    index == provider.currentPhoto
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.4),
+                                borderRadius: BorderRadius.circular(2),
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        }),
                       );
                     },
                   ),
@@ -330,23 +379,37 @@ class _SwipeCardState extends State<SwipeCard> {
                           onTap: () {
                             Navigator.of(context).push(
                               PageRouteBuilder(
-                                pageBuilder: (context, animation, secondaryAnimation) =>
-                                    OtherProfileDetailsScreen(
-                                      swipeItemModel: model,
-                                      controller: widget.controller,
-                                      swipeDirectionNotifier: widget.swipeDirectionNotifier,
-                                      showPrimaryDetail: false,
-                                    ),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        OtherProfileDetailsScreen(
+                                          swipeItemModel: model,
+                                          controller: widget.controller,
+                                          swipeDirectionNotifier:
+                                              widget.swipeDirectionNotifier,
+                                          showPrimaryDetail: false,
+                                        ),
+                                transitionsBuilder: (
+                                  context,
+                                  animation,
+                                  secondaryAnimation,
+                                  child,
+                                ) {
                                   const begin = Offset(0.0, 1.0);
                                   const end = Offset.zero;
                                   const curve = Curves.easeInOut;
 
-                                  final tween = Tween(begin: begin, end: end)
-                                      .chain(CurveTween(curve: curve));
-                                  final offsetAnimation = animation.drive(tween);
+                                  final tween = Tween(
+                                    begin: begin,
+                                    end: end,
+                                  ).chain(CurveTween(curve: curve));
+                                  final offsetAnimation = animation.drive(
+                                    tween,
+                                  );
 
-                                  return SlideTransition(position: offsetAnimation, child: child);
+                                  return SlideTransition(
+                                    position: offsetAnimation,
+                                    child: child,
+                                  );
                                 },
                               ),
                             );
@@ -386,6 +449,7 @@ class _SwipeCardState extends State<SwipeCard> {
                   height: 12,
                   decoration: BoxDecoration(
                     color: Colors.green,
+
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2),
                     boxShadow: [
