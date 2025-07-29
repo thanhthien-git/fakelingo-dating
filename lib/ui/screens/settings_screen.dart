@@ -24,34 +24,85 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.black,
-          title: Text(title, style: const TextStyle(color: Colors.white)),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: const Color(0xFFFF6B9D).withOpacity(0.3),
+              width: 1,
+            ),
+          ),
+          title: Text(
+            title,
+            style: const TextStyle(
+              color: Color(0xFF2C2C2C),
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           content: TextField(
             controller: controller,
             keyboardType:
                 title.contains('Phone')
                     ? TextInputType.phone
                     : TextInputType.emailAddress,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Color(0xFF2C2C2C)),
             decoration: InputDecoration(
               hintText: 'Enter $title',
-              hintStyle: const TextStyle(color: Colors.white54),
+              hintStyle: TextStyle(
+                color: const Color(0xFF2C2C2C).withOpacity(0.5),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(
+                  color: const Color(0xFFFF6B9D).withOpacity(0.3),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(
+                  color: Color(0xFFFF6B9D),
+                  width: 2,
+                ),
+              ),
+              filled: true,
+              fillColor: const Color(0xFFFFF5F8),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFF2C2C2C).withOpacity(0.6),
+              ),
               child: const Text(
                 'Cancel',
-                style: TextStyle(color: Colors.white70),
+                style: TextStyle(fontWeight: FontWeight.w500),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                onSave(controller.text.trim());
-                Navigator.pop(context);
-              },
-              child: const Text('Save', style: TextStyle(color: Colors.pink)),
+            Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFFF6B9D), Color(0xFFFFB3D1)],
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  onSave(controller.text.trim());
+                  Navigator.pop(context);
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
+                ),
+                child: const Text(
+                  'Save',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
             ),
           ],
         );
@@ -64,117 +115,309 @@ class _SettingsScreenState extends State<SettingsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          color: Colors.black,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                const Color(0xFFFF6B9D).withOpacity(0.1),
+                const Color(0xFFFFB3D1).withOpacity(0.1),
+              ],
+            ),
+          ),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Text(
             label.toUpperCase(),
             style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+              color: Color(0xFF2C2C2C),
+              fontWeight: FontWeight.w700,
+              fontSize: 12,
+              letterSpacing: 1.2,
             ),
           ),
         ),
-        ListTile(
-          tileColor: const Color(0xFF121212),
-          leading: const Icon(Icons.arrow_right, color: Colors.white),
-          title: Text(value, style: const TextStyle(color: Colors.white)),
-          trailing: const Text("Edit", style: TextStyle(color: Colors.white70)),
-          onTap: onTap,
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF6B9D).withOpacity(0.1),
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: ListTile(
+            title: Text(
+              value,
+              style: const TextStyle(
+                color: Color(0xFF2C2C2C),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF6B9D).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(
+                  color: const Color(0xFFFF6B9D).withOpacity(0.3),
+                ),
+              ),
+              child: const Text(
+                "Edit",
+                style: TextStyle(
+                  color: Color(0xFFFF6B9D),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+            onTap: onTap,
+          ),
         ),
-        const Divider(color: Colors.white12, height: 0),
+        Divider(color: const Color(0xFFFF6B9D).withOpacity(0.1), height: 1),
       ],
     );
   }
 
   Widget _buildSimpleTile(String title, {VoidCallback? onTap}) {
-    return ListTile(
-      tileColor: const Color(0xFF121212),
-      title: Text(title, style: const TextStyle(color: Colors.white)),
-      trailing: const Icon(
-        Icons.arrow_forward_ios,
-        color: Colors.white70,
-        size: 16,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: const Color(0xFFFF6B9D).withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFFF6B9D).withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      onTap: onTap,
+      child: ListTile(
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFF2C2C2C),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        trailing: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFF6B9D).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            Icons.arrow_forward_ios,
+            color: const Color(0xFFFF6B9D),
+            size: 16,
+          ),
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: const Color(0xFF2C2C2C).withOpacity(0.6),
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+          letterSpacing: 0.5,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        title: const Text('Settings'),
-      ),
-      body: ListView(
-        children: [
-          _buildRow("Phone Number", phoneNumber, () {
-            _editTextField("Phone Number", phoneNumber, (newValue) {
-              setState(() {
-                phoneNumber = newValue;
-              });
-            });
-          }),
-          _buildRow("Email", email, () {
-            _editTextField("Email", email, (newValue) {
-              setState(() {
-                email = newValue;
-              });
-            });
-          }),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text("PRIVACY", style: TextStyle(color: Colors.white54)),
+      backgroundColor: const Color(0xFFFFF5F8),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(
+            center: Alignment.topRight,
+            radius: 1.5,
+            colors: [Color(0xFFFFE0E6), Color(0xFFFFF5F8)],
           ),
-          _buildSimpleTile("Cookie Policy"),
-          _buildSimpleTile("Privacy Policy"),
-          _buildSimpleTile("Privacy Preferences"),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text("LEGAL", style: TextStyle(color: Colors.white54)),
-          ),
-          _buildSimpleTile("Licenses"),
-          _buildSimpleTile("Terms of Service"),
-          const SizedBox(height: 20),
-          _buildSimpleTile("Logout", onTap: () => debugPrint('Logout pressed')),
-          const SizedBox(height: 20),
-          Center(
-            child: Column(
-              children: [
-                const Text(
-                  "Version 69.69.69.69",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Custom App Bar
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: const Color(0xFFFF6B9D).withOpacity(0.3),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFFF6B9D).withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios,
+                          color: Color(0xFF2C2C2C),
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    const Text(
+                      'Settings',
+                      style: TextStyle(
+                        color: Color(0xFF2C2C2C),
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                OutlinedButton(
-                  onPressed: () => debugPrint('Delete Account pressed'),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white24),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+              ),
+
+              // Content
+              Expanded(
+                child: ListView(
+                  children: [
+                    _buildRow("Phone Number", phoneNumber, () {
+                      _editTextField("Phone Number", phoneNumber, (newValue) {
+                        setState(() {
+                          phoneNumber = newValue;
+                        });
+                      });
+                    }),
+                    const SizedBox(height: 8),
+                    _buildRow("Email", email, () {
+                      _editTextField("Email", email, (newValue) {
+                        setState(() {
+                          email = newValue;
+                        });
+                      });
+                    }),
+
+                    const SizedBox(height: 30),
+                    _buildSectionHeader("PRIVACY"),
+                    _buildSimpleTile("Cookie Policy"),
+                    _buildSimpleTile("Privacy Policy"),
+                    _buildSimpleTile("Privacy Preferences"),
+
+                    const SizedBox(height: 30),
+                    _buildSectionHeader("LEGAL"),
+                    _buildSimpleTile("Licenses"),
+                    _buildSimpleTile("Terms of Service"),
+
+                    const SizedBox(height: 30),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: const Color(0xFFFF4444).withOpacity(0.3),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFF4444).withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFF4444).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.logout,
+                            color: Color(0xFFFF4444),
+                            size: 20,
+                          ),
+                        ),
+                        title: const Text(
+                          "Logout",
+                          style: TextStyle(
+                            color: Color(0xFFFF4444),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        onTap: () => debugPrint('Logout pressed'),
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 14,
+
+                    const SizedBox(height: 40),
+                    Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            "Version 69.69.69.69",
+                            style: TextStyle(
+                              color: const Color(0xFF2C2C2C).withOpacity(0.5),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(
+                                color: const Color(0xFFFF4444).withOpacity(0.5),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: OutlinedButton(
+                              onPressed:
+                                  () => debugPrint('Delete Account pressed'),
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide.none,
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 30,
+                                  vertical: 14,
+                                ),
+                              ),
+                              child: const Text(
+                                'Delete Account',
+                                style: TextStyle(
+                                  color: Color(0xFFFF4444),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'Delete Account',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                    const SizedBox(height: 40),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(height: 40),
-        ],
+        ),
       ),
     );
   }

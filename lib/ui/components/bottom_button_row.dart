@@ -30,27 +30,30 @@ class BottomButtonsRow extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if (!isShortRow)
-                _buildSlot(
-                  show: direction == null || direction == SwipeDirection.left,
+              _buildSlot(
+                show: direction == null || direction == SwipeDirection.left,
+                width: 64,
+                height: 64,
+                child: ActionTinderIconButton(
+                  direction: SwipeDirection.left,
+                  swipeDirection: direction,
+                  icon: Icons.close,
                   width: 64,
                   height: 64,
-                  child: ActionTinderIconButton(
-                    direction: SwipeDirection.left,
-                    swipeDirection: direction,
-                    icon: Icons.close,
-                    width: 64,
-                    height: 64,
-                    inActiveColor: isDisabled ? Colors.grey.shade300 : Colors.white,
-                    activeColor: isDisabled ? Colors.grey.shade400 : Colors.red,
-                    activeIcon: Colors.white,
-                    inActiveIcon: isDisabled ? Colors.grey.shade500 : Colors.red,
-                    onTap: isDisabled ? null : () async {
-                      await Future.delayed(Duration(milliseconds: 500));
-                      onSwipe(SwipeDirection.left);
-                    },
-                  ),
+                  inActiveColor:
+                      isDisabled ? Colors.grey.shade300 : Colors.white,
+                  activeColor: isDisabled ? Colors.grey.shade400 : Colors.red,
+                  activeIcon: Colors.white,
+                  inActiveIcon: isDisabled ? Colors.grey.shade500 : Colors.red,
+                  onTap:
+                      isDisabled
+                          ? null
+                          : () async {
+                            await Future.delayed(Duration(milliseconds: 500));
+                            onSwipe(SwipeDirection.left);
+                          },
                 ),
+              ),
               _buildSlot(
                 show: direction == null || direction == SwipeDirection.right,
                 width: 64,
@@ -61,14 +64,19 @@ class BottomButtonsRow extends StatelessWidget {
                   icon: Icons.favorite,
                   width: 64,
                   height: 64,
-                  inActiveColor: isDisabled ? Colors.grey.shade300 : Colors.white,
+                  inActiveColor:
+                      isDisabled ? Colors.grey.shade300 : Colors.white,
                   activeColor: isDisabled ? Colors.grey.shade400 : Colors.green,
                   activeIcon: Colors.white,
-                  inActiveIcon: isDisabled ? Colors.grey.shade500 : Colors.green,
-                  onTap: isDisabled ? null : () async {
-                    await Future.delayed(Duration(milliseconds: 500));
-                    onSwipe(SwipeDirection.right);
-                  },
+                  inActiveIcon:
+                      isDisabled ? Colors.grey.shade500 : Colors.green,
+                  onTap:
+                      isDisabled
+                          ? null
+                          : () async {
+                            await Future.delayed(Duration(milliseconds: 500));
+                            onSwipe(SwipeDirection.right);
+                          },
                 ),
               ),
             ],
