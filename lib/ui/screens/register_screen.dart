@@ -1,3 +1,7 @@
+// screens/register_screen.dart
+import 'package:fakelingo/core/services/auth_service.dart';
+import 'package:fakelingo/core/services/storage_service.dart';
+import 'package:fakelingo/ui/screens/otp_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fakelingo/ui/components/custom_input.dart';
@@ -17,13 +21,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
   final rePasswordController = TextEditingController();
+  bool _isLoading = false;
+  final _authService = AuthService();
 
   bool _isEmailValid(String email) {
     final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
     return emailRegex.hasMatch(email);
   }
 
-  void _onRegister() {
+  Future<void> _onRegister() async {
     final email = emailController.text.trim();
     final userName = userNameController.text.trim();
     final password = passwordController.text;
@@ -33,10 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       AnimatedToast.show(context, 'Vui lòng điền đầy đủ thông tin');
       return;
     }
-    if (!_isEmailValid(email)) {
-      AnimatedToast.show(context, 'Email không hợp lệ');
-      return;
-    }
+
     if (password.length < 8) {
       AnimatedToast.show(context, 'Mật khẩu phải có ít nhất 8 ký tự');
       return;
@@ -46,8 +49,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    AnimatedToast.show(context, 'Đăng ký thành công (giả lập)');
-    Navigator.pop(context);
+    setState(() => _isLoading = true);
+
+    try {
+      final result = await _authService.register(
+        email: email,
+        username: userName,
+        password: password,
+        rePassword: rePassword
+      );
+
+      if (result != null) {
+         StorageService.saveToken(result);
+
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OtpVerificationScreen(userName: userName),
+            ),
+          );
+        }
+      } else {
+        AnimatedToast.show(context, 'Đăng ký thất bại');
+      }
+    } catch (e) {
+      print(e);
+      AnimatedToast.show(context, 'Có lỗi xảy ra, vui lòng thử lại');
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
   @override
@@ -80,28 +113,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   CustomInputField(
                     controller: emailController,
                     hintText: 'Email',
+                    enabled: !_isLoading,
                   ),
                   const SizedBox(height: 16),
                   CustomInputField(
                     controller: userNameController,
                     hintText: 'Username',
+                    enabled: !_isLoading,
                   ),
                   const SizedBox(height: 16),
                   CustomInputField(
                     controller: passwordController,
                     hintText: 'Password',
                     isPassword: true,
+                    enabled: !_isLoading,
                   ),
                   const SizedBox(height: 16),
                   CustomInputField(
                     controller: rePasswordController,
                     hintText: 'Confirm Password',
                     isPassword: true,
+                    enabled: !_isLoading,
                   ),
                   const SizedBox(height: 24),
                   AnimatedButton(
-                    onPressed: _onRegister,
-                    child: const Text(
+                    onPressed: _isLoading ? null : _onRegister,
+                    child: _isLoading
+                        ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                        : const Text(
                       'Register',
                       style: TextStyle(
                         fontFamily: 'FontBold',
@@ -113,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 24),
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: _isLoading ? null : () => Navigator.pop(context),
                     child: const Text(
                       'Already have an account? Login',
                       style: TextStyle(
@@ -129,5 +175,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    userNameController.dispose();
+    passwordController.dispose();
+    rePasswordController.dispose();
+    super.dispose();
   }
 }

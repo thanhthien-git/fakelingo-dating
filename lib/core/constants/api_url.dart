@@ -15,10 +15,12 @@ class ApiUrl {
   static String get register => '$baseUrl$_auth/register';
   static String get loginWithGoogle => '$baseUrl$_auth/google/mobile';
   static String get googleCallback => '$baseUrl$_auth/google/callback';
+  static String get verifyOtp =>  '$baseUrl$_auth/verify-otp';
 
   // User endpoints
-  static String get profile => '$baseUrl$_user/profile';
+  static String get myProfile => '$baseUrl$_user/my-profile';
   static String get updateProfile => '$baseUrl$_user/update';
+  static String get updatePhotos => '$baseUrl$_user/update-photos';
   static String get updateFcmToken => '$baseUrl$_user/fcm-token';
 
 
@@ -32,4 +34,5 @@ class ApiUrl {
 
   //Swipe endpoint
 static String get action_swipe => '$baseUrl$_swipe/action';
+static String get unread_swipe => '$baseUrl$_swipe/unread';
 }

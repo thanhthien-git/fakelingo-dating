@@ -75,15 +75,12 @@ class _SwiperHomeState extends State<SwiperHome> {
     }
   }
 
-  // Add method to handle swipe API call
   Future<void> _handleSwipeAction(int index, SwipeDirection direction) async {
-    // Validate index bounds
     if (index < 0 || index >= _listItem.length) {
       print('Invalid index: $index, list length: ${_listItem.length}');
       return;
     }
 
-    // Prevent multiple simultaneous swipes
     if (_isProcessingSwipe) {
       print('Already processing a swipe, ignoring...');
       return;
@@ -94,14 +91,14 @@ class _SwiperHomeState extends State<SwiperHome> {
     });
 
     final swipedUser = _listItem[index];
-    SwipeType swipeType;
+    String swipeType;
 
     switch (direction) {
       case SwipeDirection.left:
-        swipeType = SwipeType.LEFT;
+        swipeType = "LEFT";
         break;
       case SwipeDirection.right:
-        swipeType = SwipeType.RIGHT;
+        swipeType = "RIGHT";
         break;
       default:
         setState(() {
@@ -117,7 +114,7 @@ class _SwiperHomeState extends State<SwiperHome> {
       );
 
       await _swipeService.action(swipeDto);
-      print('Swipe action sent successfully: ${swipeType.name} for user ${swipedUser.userId}');
+      print('Swipe action sent successfully: ${swipeType} for user ${swipedUser.userId}');
     } catch (e) {
       print('Error sending swipe action: $e');
       if (mounted) {
@@ -419,10 +416,10 @@ class _SwiperHomeState extends State<SwiperHome> {
               detectableSwipeDirections: const {
                 SwipeDirection.right,
                 SwipeDirection.left,
-                SwipeDirection.up,
-              },
-              controller: _controller,
-              stackClipBehaviour: Clip.none,
+     SwipeDirection.up,
+    },
+  controller: _controller,
+  stackClipBehaviour: Clip.none,
               // Disable swipe gestures when processing
               allowVerticalSwipe: !_isProcessingSwipe,
               // allowHorizontalSwipe: !_isProcessingSwipe,

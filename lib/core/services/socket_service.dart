@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:fakelingo/core/constants/api_url.dart';
 
@@ -8,7 +9,11 @@ class SocketService {
 
   late IO.Socket socket;
 
-  void initSocket(String userId, {Function(Map<String, dynamic>)? onNewMessage}) {
+  void initSocket(
+      String userId, {
+        Function(Map<String, dynamic>)? onNewMessage,
+        required BuildContext context, // Thêm context để show popup
+      }) {
     socket = IO.io(
       ApiUrl.messageServerUrl,
       IO.OptionBuilder()
@@ -30,6 +35,30 @@ class SocketService {
       if (onNewMessage != null && data is Map<String, dynamic>) {
         onNewMessage(data);
       }
+    });
+
+    socket.on('has_blocked', (data) {
+      print('🚫 Bị block: $data');
+
+      final message =
+      data is Map<String, dynamic> ? data['message'] ?? 'You have been blocked due to harmful message.' : 'You have been blocked.';
+
+      // Hiển thị popup
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('🚫 Blocked'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          );
+        },
+      );
     });
   }
 

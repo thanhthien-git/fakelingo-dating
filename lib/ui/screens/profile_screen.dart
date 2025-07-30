@@ -1,3 +1,6 @@
+import 'package:fakelingo/core/models/user_model.dart';
+import 'package:fakelingo/core/services/user_service.dart';
+import 'package:fakelingo/ui/components/animate_toast.dart';
 import 'package:flutter/material.dart';
 import 'media_screen.dart';
 import 'settings_screen.dart';
@@ -14,15 +17,39 @@ class _ProfileScreenState extends State<ProfileScreen>
     with TickerProviderStateMixin {
   int _pageIndex = 0;
   final PageController _pageController = PageController();
+  final _userService = UserService();
+  User? _user;
 
   @override
   void initState() {
     super.initState();
+    fetchProfile();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> fetchProfile() async {
+    try {
+      final response = await _userService.myProfile();
+      if (response != null) {
+        setState(() {
+          _user = response;
+        });
+      } else {
+        AnimatedToast.show(context, "Không thể lấy thông tin người dùng");
+      }
+    } catch (e) {
+      AnimatedToast.show(context, "Lỗi");
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchProfile();
   }
 
   @override
@@ -38,55 +65,56 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
+          child: RefreshIndicator(
+            onRefresh:  fetchProfile, // Kéo để refresh
+            color: const Color(0xFFFF6B9D),
+            backgroundColor: Colors.white,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(), // Bắt buộc phải có để RefreshIndicator hoạt động
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
 
-                // Header with notification and menu
-                _buildHeader(),
+                  // Header
+                  _buildHeader(),
 
-                const SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
-                // Profile Avatar with animated ring
-                _buildAnimatedAvatar(),
+                  // Avatar
+                  _buildAnimatedAvatar(),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 25),
 
-                // Name and stats section
-                _buildNameAndStats(),
+                  // Name and stats
+                  _buildNameAndStats(),
 
-                const SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
-                // Quick stats cards
-                _buildQuickStats(),
+                  // Buttons
+                  _buildGlassmorphismButtons(),
 
-                const SizedBox(height: 35),
+                  const SizedBox(height: 40),
 
-                // Action buttons with glassmorphism
-                _buildGlassmorphismButtons(),
+                  const SizedBox(height: 35),
 
-                const SizedBox(height: 40),
+                  // Premium carousel
+                  _buildPremiumCarousel(),
 
-                const SizedBox(height: 35),
+                  const SizedBox(height: 30),
 
-                // Premium features carousel
-                _buildPremiumCarousel(),
+                  // Premium CTA
+                  _buildPremiumCTA(),
 
-                const SizedBox(height: 30),
-
-                // Premium CTA with particles effect
-                _buildPremiumCTA(),
-
-                const SizedBox(height: 30),
-              ],
+                  const SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
 
   Widget _buildHeader() {
     return Padding(
@@ -189,10 +217,12 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           padding: const EdgeInsets.all(4),
           child: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
-                image: AssetImage('assets/blur_background.jpg'),
+                image: _user?.profile?.photos.isNotEmpty == true
+                    ? NetworkImage(_user!.profile!.photos.first)
+                    : const AssetImage('assets/blur_background.jpg') as ImageProvider,
                 fit: BoxFit.cover,
               ),
             ),
@@ -228,9 +258,9 @@ class _ProfileScreenState extends State<ProfileScreen>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Luna Martinez',
-              style: TextStyle(
+            Text(
+              _user?.profile?.name ?? '',
+              style: const TextStyle(
                 color: Color(0xFF2C2C2C),
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
@@ -258,72 +288,14 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
         const SizedBox(height: 8),
         Text(
-          '23 • Ho Chi Minh City',
+          '${_user?.profile?.age ?? ''} • ${_user?.profile?.bio ?? ''}',
           style: TextStyle(
             color: const Color(0xFF2C2C2C).withOpacity(0.6),
             fontSize: 16,
             fontWeight: FontWeight.w400,
           ),
         ),
-        const SizedBox(height: 15),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                const Color(0xFFFF6B9D).withOpacity(0.1),
-                const Color(0xFFFFB3D1).withOpacity(0.1),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFFFF6B9D).withOpacity(0.3)),
-          ),
-          child: const Text(
-            '67% Profile Complete',
-            style: TextStyle(
-              color: Color(0xFF2C2C2C),
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
       ],
-    );
-  }
-
-  Widget _buildQuickStats() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildStatCard(
-              '156',
-              'Matches',
-              Icons.favorite,
-              const Color(0xFFFF6B9D),
-            ),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: _buildStatCard(
-              '89',
-              'Likes',
-              Icons.thumb_up,
-              const Color(0xFF00E676),
-            ),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: _buildStatCard(
-              '23',
-              'DisLikes',
-              Icons.thumb_down,
-              const Color(0xFFFF4444),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -387,13 +359,20 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           const SizedBox(width: 15),
           Expanded(
-            child: _buildGlassButton(Icons.edit_outlined, 'Edit Profile', () {
-              Navigator.push(
+            child: _buildGlassButton(Icons.edit_outlined, 'Edit Profile', () async {
+              final result = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const EditProfileScreen()),
+                MaterialPageRoute(
+                  builder: (context) => EditProfileScreen(user: _user!),
+                ),
               );
+
+              if (result == true) { // chỉ reload khi đã lưu thành công
+                await fetchProfile(); // fetch dữ liệu mới
+              }
             }),
           ),
+
           const SizedBox(width: 15),
           Expanded(
             child: _buildGlassButton(
@@ -503,7 +482,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             onPageChanged: (index) => setState(() => _pageIndex = index),
             children: const [
               _PremiumSlide(
-                title: 'Tinder Platinum',
+                title: 'Fakelingo Platinum',
                 subtitle: 'See who likes you before you swipe',
                 icon: Icons.diamond_outlined,
                 gradient: [Color(0xFFFF6B9D), Color(0xFFFFB3D1)],

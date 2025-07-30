@@ -52,7 +52,10 @@ class _MainScreenState extends State<MainScreen> {
   Future<void> _connectSocket() async {
     final userId = await StorageService.getItem('user_id');
     if (userId != null) {
-      socketService.initSocket(userId);
+      socketService.initSocket(
+        userId,
+        context: context,
+      );
     } else {
       print('⚠️ userId not found in StorageService');
     }

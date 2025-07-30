@@ -27,14 +27,14 @@ class SwipeItemModel {
     final profile = user.profile!;
     return SwipeItemModel(
       imageUrls: profile.photos,
-      name: profile.name,
-      age: profile.age,
-      gender: profile.gender,
+      name: profile.name ?? '',
+      age: profile.age ?? 20,
+      gender: profile.gender ?? "Nam",
       bio: profile.bio,
       description: profile.bio,
       userId: user.id,
       lookingFor: null,
-      distance: profile.preferences.maxDistance,
+      distance: profile.preferences?.maxDistance ?? 10,
     );
   }
 }

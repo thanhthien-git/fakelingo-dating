@@ -1,6 +1,6 @@
 class SwipeDto {
   final String targetUserId;
-  final SwipeType type;
+  final String type;
 
   SwipeDto({
     required this.targetUserId,
@@ -10,8 +10,7 @@ class SwipeDto {
   Map<String, dynamic> toJson() {
     return {
       'targetUserId': targetUserId,
-      'type': type.name
+      'type': type
     };
   }
 }
-enum SwipeType { LEFT, RIGHT }
